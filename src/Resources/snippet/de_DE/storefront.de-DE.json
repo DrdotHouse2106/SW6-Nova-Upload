@@ -3,7 +3,7 @@
         "contactLabel": "Dateien anhängen (optional)",
         "productLabel": "Datei hochladen",
         "hint": "Fotos, Grafiken (z. B. SVG, PDF, AI), Zeichnungen oder 3D-Dateien (z. B. STL, 3MF, STEP) – bis zu %count% Dateien, je max. %size% MB.",
-        "privacy": "Die Dateien werden geschützt gespeichert und nur für Ihre Anfrage bzw. Bestellung verwendet.",
+        "privacy": "Die Dateien werden geschützt gespeichert und für Ihre Anfrage bzw. Bestellung verwendet.",
         "lineItemFiles": "Datei:",
         "errorCount": "Bitte höchstens %count% Dateien anhängen.",
         "errorFailed": "Die Datei „%name%“ konnte nicht hochgeladen werden – vermutlich ist sie zu groß.",
@@ -14,7 +14,25 @@
         "errorStore": "Die Datei konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
         "mail": {
             "headline": "Hochgeladene Dateien",
-            "text": "Die Dateien sind geschützt im Shop gespeichert: Administration → Bestellungen → Uploads"
+            "text": "Die Dateien sind geschützt im Shop gespeichert: Administration → Bestellungen → Uploads",
+            "consentYes": "Freigabe fürs Sortiment: JA – der Kunde ist einverstanden, dass das Teil ins Sortiment aufgenommen wird.",
+            "consentNo": "Freigabe fürs Sortiment: nein",
+            "area": "Für freigeschaltete Konten mit Zwei-Faktor-Anmeldung im Shop abrufbar unter „Mein Konto → Anfragen & Dateien“:"
+        },
+        "shareConsent": "Freiwillig: Ich bin einverstanden, dass das Teil aus meiner Anfrage ins Sortiment aufgenommen wird, damit auch andere davon profitieren.",
+        "account": {
+            "title": "Anfragen & Dateien",
+            "intro": "Hochgeladene Dateien aus dem Kontaktformular und von Artikeln dieses Shops. Nur für freigeschaltete Konten mit Zwei-Faktor-Anmeldung.",
+            "search": "Suchen: Name, E-Mail, Betreff, Bestellnummer, Dateiname …",
+            "empty": "Keine Dateien gefunden.",
+            "download": "Herunterladen",
+            "order": "Bestellung",
+            "contact": "Anfrage",
+            "product": "Artikel",
+            "consent": "Freigabe fürs Sortiment",
+            "needs2fa": "Für diesen Bereich ist die Zwei-Faktor-Anmeldung Pflicht. Bitte richten Sie sie zuerst ein.",
+            "missing2fa": "Der Download-Bereich benötigt das Plugin „Nova 2FA“. Bitte den Shop-Betreiber informieren.",
+            "searchButton": "Suchen"
         }
     }
 }

@@ -93,9 +93,12 @@ class UploadRules
         return null;
     }
 
-    public function trans(string $id): string
+    /**
+     * @param array<string, string|int> $parameters
+     */
+    public function trans(string $id, array $parameters = []): string
     {
-        return $this->translator->trans($id);
+        return $this->translator->trans($id, $parameters);
     }
 
     /**

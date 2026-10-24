@@ -28,7 +28,8 @@
             "empty": "Keine Dateien gefunden.",
             "loadError": "Uploads konnten nicht geladen werden.",
             "downloadError": "Datei konnte nicht heruntergeladen werden.",
-            "deleteError": "Datei konnte nicht gelöscht werden."
+            "deleteError": "Datei konnte nicht gelöscht werden.",
+            "shareConsent": "Freigabe fürs Sortiment"
         },
         "order": {
             "title": "Hochgeladene Dateien"

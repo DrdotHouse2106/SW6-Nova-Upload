@@ -16,6 +16,8 @@ Die Dateien werden **geschützt im Shop gespeichert**: Sie liegen im privaten Sp
 | **Administration** | *Bestellungen → Uploads*: alle Dateien mit Kunde, Betreff bzw. Artikel und Bestellnummer, Suche und Filter, Herunterladen und Löschen. In jeder Bestellung zeigt die Karte **„Hochgeladene Dateien“** die Dateien dieser Bestellung |
 | **Mail-Hinweis** | Die Kontaktformular-Mail an den Shop enthält die Dateinamen und einen Link direkt zur Anfrage in der Administration. Eine Kopie an den Kunden bekommt keinen Hinweis |
 | **Prüfung** | Anzahl, Größe je Datei und Gesamtgröße werden schon im Browser und noch einmal auf dem Server geprüft. Nur erlaubte Dateitypen (siehe unten) |
+| **Download-Bereich im Kundenkonto** | Für freigeschaltete Konten (z. B. Fertigung, Partner) ohne Zugang zur Administration: *Mein Konto → Anfragen & Dateien* zeigt alle Dateien des Verkaufskanals zum Herunterladen. **Nur mit Passwort und Code aus der Authenticator-App** (Plugin [Nova 2FA](https://github.com/DrdotHouse2106/SW6-Nova-2FA)) |
+| **Freigabe fürs Sortiment** | Optionales, freiwilliges Häkchen im Kontaktformular: „Teil darf ins Sortiment aufgenommen werden“. Die Zustimmung steht in der Mail, im Download-Bereich und in der Administration |
 | **Aufbewahrung** | Automatisches Löschen nach einstellbaren Fristen: Anfragen (Standard 180 Tage), Dateien aus Warenkörben ohne Bestellung (14 Tage), Dateien von Bestellungen (Standard: behalten) |
 
 **Erlaubte Dateitypen:** Bilder (JPG, PNG, GIF, WebP, HEIC, TIFF, BMP, SVG), Grafik (AI, EPS, PSD, CDR), Dokumente (PDF, Word, Excel, OpenDocument, CSV, TXT, RTF), ZIP sowie 3D/CAD (STL, 3MF, OBJ, STEP/STP, IGES/IGS, AMF, PLY, WRL, X3D, DXF, DWG). Programmdateien, Skripte und HTML werden abgelehnt.
@@ -26,6 +28,7 @@ Die Dateien werden **geschützt im Shop gespeichert**: Sie liegen im privaten Sp
 - Gespeichert wird **ohne Dateiendung** unter einer zufälligen ID – eine hochgeladene Datei kann auf dem Server nie ausgeführt werden.
 - **Herunterladen** nur in der Administration mit dem Recht „Bestellungen ansehen“, **Löschen** mit „Bestellungen löschen“. Dateien werden immer als Download ausgeliefert, nie im Browser geöffnet.
 - **Keine Anhänge in Mails** – die Dateien liegen nicht in Postfächern und werden nicht unverschlüsselt weitergeleitet.
+- **Download-Bereich** für Konten ohne Admin-Zugang nur mit Passwort **und** Authenticator-Code (Nova 2FA), nur Dateien des eigenen Verkaufskanals, keine öffentlichen Datei-Links.
 - **Automatisches Löschen** nach den eingestellten Fristen (Datenminimierung). Unter dem Upload-Feld steht ein kurzer Hinweis für Kunden; in der Datenschutzerklärung sollte der Upload erwähnt werden (Zweck: Bearbeitung der Anfrage bzw. Bestellung, Speicherdauer wie eingestellt).
 - Dateinamen werden bereinigt (keine Pfade oder Sonderzeichen).
 
@@ -58,6 +61,14 @@ bin/console cache:clear
 2. In der Erlebniswelt der Anfrage-Seite ein Element **Formular** einfügen, Typ **Kontakt**, Empfänger eintragen
 3. Cache leeren und eine Testanfrage mit Datei absenden – die Datei erscheint unter *Bestellungen → Uploads*
 
+### Download-Bereich für die Fertigung (ohne Admin-Zugang)
+
+1. Plugin **Nova 2FA** installieren (Plugin-Katalog)
+2. Nova Upload → Konfigurieren → Verkaufskanal → **„Download-Bereich im Kundenkonto (mit Nova 2FA)“** einschalten
+3. Für die Person ein Kundenkonto im Verkaufskanal anlegen (oder vorhandenes nutzen) → *Kunden → Kunde → Zusatzfelder „Nova Upload“* → **„Zugriff auf Anfragen & Dateien“** einschalten
+4. Die Person meldet sich im Shop an, richtet unter *Mein Konto → Zwei-Faktor-Anmeldung* die Authenticator-App ein und sieht danach *Mein Konto → Anfragen & Dateien*
+5. Die Kontaktformular-Mail enthält dann einen Link direkt zur Anfrage im Bereich
+
 ### Artikel (z. B. Logo)
 
 1. Artikel öffnen → Tab **Spezifikationen** → Zusatzfelder **„Datei-Upload (Nova Upload)“**
@@ -74,6 +85,8 @@ bin/console cache:clear
 | Kontaktformular | Datei-Upload im Kontaktformular | aus |
 | | Max. Anzahl Dateien / Größe je Datei / Gesamtgröße | 5 / 10 MB / 25 MB |
 | | Hinweis in der Kontaktformular-Mail (Dateinamen + Link) | an |
+| | Download-Bereich im Kundenkonto (mit Nova 2FA) | aus |
+| | Freiwillige Zustimmung: Teil darf ins Sortiment | aus |
 | Artikel | Max. Anzahl Dateien / Größe je Datei / Gesamtgröße | 3 / 20 MB / 50 MB |
 | Aufbewahrung | Dateien aus dem Kontaktformular löschen nach | 180 Tagen |
 | | Artikel-Dateien ohne Bestellung löschen nach | 14 Tagen |
@@ -113,6 +126,12 @@ Shopware 6.6.x und 6.7.x · alle aktuellen Browser. Läuft mit jedem Theme; mit 
 **Ursache:** Zusatzfeld nicht gesetzt, nur an einer anderen Variante gesetzt, oder der Artikel ist nicht kaufbar (ausverkauft, Hauptartikel mit Varianten)
 
 **Lösung:** Beim Hauptartikel *Spezifikationen → Datei-Upload (Nova Upload) → Datei-Upload anbieten* einschalten und speichern, Cache leeren. Das Feld steht nur dort, wo auch der „In den Warenkorb“-Button steht
+
+### „Anfragen & Dateien“ fehlt im Kundenkonto
+
+**Ursache:** Download-Bereich im Verkaufskanal aus, Zusatzfeld „Zugriff auf Anfragen & Dateien“ beim Kunden nicht gesetzt, oder Nova 2FA nicht installiert
+
+**Lösung:** Alle drei prüfen. Ohne eingerichtete Zwei-Faktor-Anmeldung leitet der Bereich zuerst zur Einrichtung (*Mein Konto → Zwei-Faktor-Anmeldung*)
 
 ### Dateien werden nicht automatisch gelöscht
 

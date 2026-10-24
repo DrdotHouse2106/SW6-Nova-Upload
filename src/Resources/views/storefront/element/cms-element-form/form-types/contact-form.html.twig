@@ -17,5 +17,14 @@
                 maxTotalMb: max(novaMaxMb, config('NovaUpload.config.contactMaxTotalMb') ?: 25),
             },
         } %}
+
+        {% if config('NovaUpload.config.contactShareConsent') %}
+            <div class="form-check col-12 nova-upload-consent">
+                <input type="checkbox" class="form-check-input" id="{{ formPrefix }}-nova-upload-consent" name="novaUploadShareConsent" value="1">
+                <label class="form-check-label" for="{{ formPrefix }}-nova-upload-consent">
+                    {{ 'novaUpload.shareConsent'|trans|sw_sanitize }}
+                </label>
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}

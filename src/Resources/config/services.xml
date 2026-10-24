@@ -16,6 +16,8 @@
             <argument type="service" id="logger"/>
         </service>
 
+
+
         <service id="Nova\Upload\Subscriber\ContactUploadSubscriber">
             <argument type="service" id="Nova\Upload\Service\UploadRules"/>
             <argument type="service" id="Nova\Upload\Service\UploadStore"/>
@@ -48,6 +50,16 @@
             <argument type="service" id="logger"/>
             <argument type="service" id="Nova\Upload\Service\UploadStore"/>
             <tag name="messenger.message_handler"/>
+        </service>
+        <!-- Download-Bereich im Kundenkonto – Nova 2FA ist Pflicht (optional verknüpft) -->
+        <service id="Nova\Upload\Controller\AccountUploadController" public="true">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
+            <argument type="service" id="Nova\Upload\Service\UploadStore"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Nova\TwoFactor\Service\TwoFactorGuard" on-invalid="null"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
     </services>
 </container>

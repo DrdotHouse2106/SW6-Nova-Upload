@@ -109,3 +109,14 @@
         }
     }
 }
+
+.nova-upload__consent {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--color-emerald-50, #e6f7ed);
+    color: var(--color-emerald-700, #0b6b3a);
+    font-size: 12px;
+    font-weight: 600;
+}

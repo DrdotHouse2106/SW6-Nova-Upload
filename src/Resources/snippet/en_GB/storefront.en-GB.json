@@ -3,7 +3,7 @@
         "contactLabel": "Attach files (optional)",
         "productLabel": "Upload file",
         "hint": "Photos, graphics (e.g. SVG, PDF, AI), drawings or 3D files (e.g. STL, 3MF, STEP) – up to %count% files, max. %size% MB each.",
-        "privacy": "The files are stored securely and only used for your request or order.",
+        "privacy": "The files are stored securely and used for your request or order.",
         "lineItemFiles": "File:",
         "errorCount": "Please attach at most %count% files.",
         "errorFailed": "The file \"%name%\" could not be uploaded – it is probably too large.",
@@ -14,7 +14,25 @@
         "errorStore": "The file could not be saved. Please try again.",
         "mail": {
             "headline": "Uploaded files",
-            "text": "The files are stored securely in the shop: Administration → Orders → Uploads"
+            "text": "The files are stored securely in the shop: Administration → Orders → Uploads",
+            "consentYes": "Range approval: YES – the customer agrees that the part may be added to the range.",
+            "consentNo": "Range approval: no",
+            "area": "Available for enabled accounts with two-factor login under \"My account → Requests & files\":"
+        },
+        "shareConsent": "Optional: I agree that the part from my request may be added to the product range so that others can benefit too.",
+        "account": {
+            "title": "Requests & files",
+            "intro": "Uploaded files from the contact form and products of this shop. Only for enabled accounts with two-factor login.",
+            "search": "Search: name, e-mail, subject, order number, file name …",
+            "empty": "No files found.",
+            "download": "Download",
+            "order": "Order",
+            "contact": "Request",
+            "product": "Product",
+            "consent": "Approved for the range",
+            "needs2fa": "Two-factor login is required for this area. Please set it up first.",
+            "missing2fa": "The download area requires the \"Nova 2FA\" plugin.",
+            "searchButton": "Search"
         }
     }
 }

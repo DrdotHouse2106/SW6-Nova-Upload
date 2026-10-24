@@ -40,3 +40,61 @@
 .nova-upload-product {
     margin-bottom: 1rem;
 }
+
+.nova-upload-consent {
+    margin-top: .75rem;
+    padding-left: calc(1.5em + var(--bs-gutter-x, 1.5rem) * .5);
+    font-size: .875rem;
+}
+
+/* Mein Konto → Anfragen & Dateien */
+.nova-uploads-search {
+    display: flex;
+    gap: .5rem;
+    max-width: 36rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.nova-uploads-list {
+    display: grid;
+    gap: .75rem;
+}
+
+.nova-uploads-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    justify-content: space-between;
+    margin-bottom: .25rem;
+    font-size: .8125rem;
+    opacity: .8;
+}
+
+.nova-uploads-consent {
+    padding: .1rem .5rem;
+    border-radius: 1rem;
+    background: #e6f7ed;
+    color: #0b6b3a;
+    font-weight: 600;
+    opacity: 1;
+}
+
+.nova-uploads-customer {
+    margin: .25rem 0 .75rem;
+    font-size: .875rem;
+}
+
+.nova-uploads-download {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nova-uploads-pager {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.5rem;
+}

@@ -57,7 +57,10 @@
                                         <a :href="`mailto:${item.customerEmail}`">{{ item.customerEmail }}</a>
                                     </div>
                                 </td>
-                                <td>{{ item.reference || '–' }}</td>
+                                <td>
+                                    {{ item.reference || '–' }}
+                                    <div v-if="item.shareConsent" class="nova-upload__consent">{{ $tc('nova-upload.list.shareConsent') }}</div>
+                                </td>
                                 <td>
                                     <a v-if="item.orderId" href="#" @click.prevent="openOrder(item)">{{ item.orderNumber }}</a>
                                     <span v-else-if="item.source === 'product'" class="nova-upload__muted">{{ $tc('nova-upload.list.noOrder') }}</span>

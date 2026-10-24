@@ -39,6 +39,24 @@
         </input-field>
 
         <input-field type="bool">
+            <name>downloadArea</name>
+            <label>Download area in the customer account (with Nova 2FA)</label>
+            <label lang="de-DE">Download-Bereich im Kundenkonto (mit Nova 2FA)</label>
+            <helpText lang="de-DE">Freigeschaltete Kundenkonten (Kunde → Zusatzfelder „Nova Upload: Zugriff auf Anfragen &amp; Dateien“) sehen unter „Mein Konto“ alle Anfragen mit Dateien dieses Verkaufskanals und können sie herunterladen – nur mit Passwort UND Code aus der Authenticator-App (Plugin Nova 2FA). Die Kontaktformular-Mail verlinkt dann dorthin. Für die Fertigung ohne Zugang zur Administration.</helpText>
+            <helpText>Enabled customer accounts can list and download the request files of this sales channel under "My account" – only with password AND authenticator code (Nova 2FA plugin).</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>contactShareConsent</name>
+            <label>Optional consent: part may be added to the range</label>
+            <label lang="de-DE">Freiwillige Zustimmung: Teil darf ins Sortiment</label>
+            <helpText lang="de-DE">Zeigt unter dem Upload-Feld ein freiwilliges Häkchen. Die Zustimmung steht in der Mail und unter Bestellungen → Uploads. Text über den Textbaustein novaUpload.shareConsent änderbar.</helpText>
+            <helpText>Shows an optional checkbox below the upload field. The consent is shown in the mail and under Orders → Uploads.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
             <name>mailNotice</name>
             <label>Notice in the contact mail</label>
             <label lang="de-DE">Hinweis in der Kontaktformular-Mail</label>

@@ -28,7 +28,8 @@
             "empty": "No files found.",
             "loadError": "Uploads could not be loaded.",
             "downloadError": "File could not be downloaded.",
-            "deleteError": "File could not be deleted."
+            "deleteError": "File could not be deleted.",
+            "shareConsent": "Approved for the range"
         },
         "order": {
             "title": "Uploaded files"

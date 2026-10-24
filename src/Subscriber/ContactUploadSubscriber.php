@@ -26,6 +26,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterface
 {
     public const FIELD = 'novaUploadFiles';
+    public const CONSENT_FIELD = 'novaUploadShareConsent';
     public const ROUTE = 'frontend.form.contact.send';
 
     private ?Request $request = null;
@@ -34,6 +35,10 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
     private array $stored = [];
 
     private string $adminUrl = '';
+
+    private string $shopUrl = '';
+
+    private bool $shareConsent = false;
 
     public function __construct(
         private readonly UploadRules $rules,
@@ -95,6 +100,8 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
             'customerName' => $name,
             'customerEmail' => \is_string($data['email'] ?? null) ? $data['email'] : null,
             'reference' => \is_string($data['subject'] ?? null) ? $data['subject'] : null,
+            'shareConsent' => $this->shareConsent = $this->config->getBool('NovaUpload.config.contactShareConsent', $event->getSalesChannelId())
+                && $request->request->getBoolean(self::CONSENT_FIELD),
         ];
 
         foreach (UploadRules::files($request, self::FIELD) as $file) {
@@ -106,6 +113,9 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
         }
 
         $this->adminUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/admin#/nova/upload/index';
+        // Adresse des Verkaufskanals (inkl. Sprach-Pfad) für den Link in den Download-Bereich
+        $base = $request->attributes->get('sw-sales-channel-absolute-base-url');
+        $this->shopUrl = rtrim(\is_string($base) && $base !== '' ? $base : $request->getSchemeAndHttpHost() . $request->getBasePath(), '/');
     }
 
     public function onMail(MailBeforeValidateEvent $event): void
@@ -132,17 +142,34 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
             return;
         }
 
-        $names = array_map(static fn (array $file): string => $file['name'], $this->stored);
         $search = $this->adminUrl !== '' ? $this->adminUrl . '?term=' . rawurlencode($this->stored[0]['id']) : '';
         $headline = $this->rules->trans('novaUpload.mail.headline');
         $text = $this->rules->trans('novaUpload.mail.text');
+        $e = static fn (string $value): string => htmlspecialchars($value, \ENT_QUOTES);
 
-        $html = '<hr><p><strong>' . htmlspecialchars($headline, \ENT_QUOTES) . '</strong><br>'
-            . implode('<br>', array_map(static fn (string $name): string => '• ' . htmlspecialchars($name, \ENT_QUOTES), $names))
-            . '</p><p>' . htmlspecialchars($text, \ENT_QUOTES)
-            . ($search !== '' ? '<br><a href="' . htmlspecialchars($search, \ENT_QUOTES) . '">' . htmlspecialchars($search, \ENT_QUOTES) . '</a>' : '')
+        // Download-Bereich im Kundenkonto (Passwort + Authenticator-App) für Empfänger ohne Admin-Zugang
+        $areaUrl = $this->config->getBool('NovaUpload.config.downloadArea', $salesChannelId) && $this->shopUrl !== ''
+            ? $this->shopUrl . '/account/nova-uploads?term=' . rawurlencode($this->stored[0]['id'])
+            : null;
+
+        $htmlItems = array_map(static fn (array $file): string => '• ' . $e($file['name']), $this->stored);
+        $plainItems = array_map(static fn (array $file): string => '- ' . $file['name'], $this->stored);
+
+        $consentLine = null;
+        if ($this->config->getBool('NovaUpload.config.contactShareConsent', $salesChannelId)) {
+            $consentLine = $this->rules->trans($this->shareConsent ? 'novaUpload.mail.consentYes' : 'novaUpload.mail.consentNo');
+        }
+        $areaLine = $areaUrl !== null ? $this->rules->trans('novaUpload.mail.area') : null;
+
+        $html = '<hr><p><strong>' . $e($headline) . '</strong><br>' . implode('<br>', $htmlItems) . '</p>'
+            . ($areaUrl !== null ? '<p>' . $e((string) $areaLine) . '<br><a href="' . $e($areaUrl) . '">' . $e($areaUrl) . '</a></p>' : '')
+            . ($consentLine !== null ? '<p><strong>' . $e($consentLine) . '</strong></p>' : '')
+            . '<p>' . $e($text)
+            . ($search !== '' ? '<br><a href="' . $e($search) . '">' . $e($search) . '</a>' : '')
             . '</p>';
-        $plain = "\n\n" . $headline . "\n" . implode("\n", array_map(static fn (string $name): string => '- ' . $name, $names))
+        $plain = "\n\n" . $headline . "\n" . implode("\n", $plainItems)
+            . ($areaUrl !== null ? "\n" . $areaLine . "\n" . $areaUrl : '')
+            . ($consentLine !== null ? "\n" . $consentLine : '')
             . "\n" . $text . ($search !== '' ? "\n" . $search : '');
 
         // Inhalte sind Twig-Vorlagen – den Zusatz unverändert durchreichen
@@ -159,6 +186,8 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
         $this->request = null;
         $this->stored = [];
         $this->adminUrl = '';
+        $this->shopUrl = '';
+        $this->shareConsent = false;
     }
 
     private function salesChannelId(Request $request): ?string

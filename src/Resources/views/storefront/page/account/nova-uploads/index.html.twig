@@ -1,0 +1,52 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+
+{% block page_account_main_content %}
+    <div class="account-nova-uploads">
+        <h1 class="account-welcome">{{ 'novaUpload.account.title'|trans|sw_sanitize }}</h1>
+        <p>{{ 'novaUpload.account.intro'|trans|sw_sanitize }}</p>
+
+        <form action="{{ path('frontend.nova_upload.account') }}" method="get" class="nova-uploads-search">
+            <input type="search" name="term" value="{{ novaUploadTerm }}" class="form-control" placeholder="{{ 'novaUpload.account.search'|trans|striptags }}">
+            <button class="btn btn-secondary" type="submit">{{ 'novaUpload.account.searchButton'|trans|sw_sanitize }}</button>
+        </form>
+
+        {% if novaUploads is empty %}
+            <p class="nova-uploads-empty">{{ 'novaUpload.account.empty'|trans|sw_sanitize }}</p>
+        {% else %}
+            <div class="nova-uploads-list">
+                {% for item in novaUploads %}
+                    <div class="card nova-uploads-item">
+                        <div class="card-body">
+                            <div class="nova-uploads-head">
+                                <span class="nova-uploads-source">
+                                    {{ ('novaUpload.account.' ~ (item.source == 'product' ? 'product' : 'contact'))|trans|sw_sanitize }}
+                                    · {{ item.createdAt|format_datetime('short', 'short', locale=app.request.locale) }}
+                                </span>
+                                {% if item.shareConsent %}
+                                    <span class="nova-uploads-consent">{{ 'novaUpload.account.consent'|trans|sw_sanitize }}</span>
+                                {% endif %}
+                            </div>
+                            <strong>{{ item.reference ?: '–' }}</strong>
+                            <div class="nova-uploads-customer">
+                                {{ item.customerName }}{% if item.customerEmail %} · <a href="mailto:{{ item.customerEmail }}">{{ item.customerEmail }}</a>{% endif %}
+                                {% if item.orderNumber %} · {{ 'novaUpload.account.order'|trans|sw_sanitize }} {{ item.orderNumber }}{% endif %}
+                            </div>
+                            <a class="btn btn-primary btn-sm nova-uploads-download" href="{{ path('frontend.nova_upload.account.file', {id: item.id}) }}">
+                                {{ 'novaUpload.account.download'|trans|sw_sanitize }}: {{ item.fileName }}
+                                ({{ (item.size / 1048576)|round(1)|replace({'.': ','}) }} MB)
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if novaUploadPages > 1 %}
+                <nav class="nova-uploads-pager">
+                    {% if novaUploadPage > 1 %}<a class="btn btn-light" href="{{ path('frontend.nova_upload.account', {term: novaUploadTerm, p: novaUploadPage - 1}) }}">‹</a>{% endif %}
+                    <span>{{ novaUploadPage }} / {{ novaUploadPages }}</span>
+                    {% if novaUploadPage < novaUploadPages %}<a class="btn btn-light" href="{{ path('frontend.nova_upload.account', {term: novaUploadTerm, p: novaUploadPage + 1}) }}">›</a>{% endif %}
+                </nav>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

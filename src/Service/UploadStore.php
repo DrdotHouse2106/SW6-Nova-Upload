@@ -25,7 +25,7 @@ class UploadStore
     }
 
     /**
-     * @param array{customerName?: ?string, customerEmail?: ?string, reference?: ?string, productId?: ?string, lineItemId?: ?string} $meta
+     * @param array{customerName?: ?string, customerEmail?: ?string, reference?: ?string, productId?: ?string, lineItemId?: ?string, shareConsent?: bool} $meta
      *
      * @return array{id: string, name: string}
      */
@@ -60,6 +60,7 @@ class UploadStore
             'customer_name' => $this->cut($meta['customerName'] ?? null),
             'customer_email' => $this->cut($meta['customerEmail'] ?? null),
             'reference' => $this->cut($meta['reference'] ?? null),
+            'share_consent' => !empty($meta['shareConsent']) ? 1 : 0,
             'product_id' => isset($meta['productId']) && Uuid::isValid($meta['productId']) ? Uuid::fromHexToBytes($meta['productId']) : null,
             'line_item_id' => $meta['lineItemId'] ?? null,
             'created_at' => $this->now(),
@@ -97,7 +98,7 @@ class UploadStore
     }
 
     /**
-     * @param array{term?: string, source?: string, orderId?: string} $filter
+     * @param array{term?: string, source?: string, orderId?: string, salesChannelId?: string} $filter
      *
      * @return array{items: list<array<string, mixed>>, total: int}
      */
@@ -109,6 +110,11 @@ class UploadStore
         if (\in_array($filter['source'] ?? '', [UploadRules::SOURCE_CONTACT, UploadRules::SOURCE_PRODUCT], true)) {
             $where[] = 'u.`source` = :source';
             $params['source'] = $filter['source'];
+        }
+
+        if (isset($filter['salesChannelId']) && Uuid::isValid($filter['salesChannelId'])) {
+            $where[] = 'u.`sales_channel_id` = :salesChannelId';
+            $params['salesChannelId'] = Uuid::fromHexToBytes($filter['salesChannelId']);
         }
 
         if (isset($filter['orderId']) && Uuid::isValid($filter['orderId'])) {
@@ -131,7 +137,7 @@ class UploadStore
         $rows = $this->connection->fetchAllAssociative(
             'SELECT LOWER(HEX(u.`id`)) AS id, u.`source`, LOWER(HEX(u.`sales_channel_id`)) AS salesChannelId,
                     u.`file_name` AS fileName, u.`mime_type` AS mimeType, u.`size`, u.`customer_name` AS customerName,
-                    u.`customer_email` AS customerEmail, u.`reference`, LOWER(HEX(u.`product_id`)) AS productId,
+                    u.`customer_email` AS customerEmail, u.`reference`, u.`share_consent` AS shareConsent, LOWER(HEX(u.`product_id`)) AS productId,
                     LOWER(HEX(u.`order_id`)) AS orderId, u.`order_number` AS orderNumber, u.`created_at` AS createdAt
              FROM `nova_upload` u WHERE ' . $sqlWhere . '
              ORDER BY u.`created_at` DESC LIMIT ' . $limit . ' OFFSET ' . $offset,
@@ -142,13 +148,14 @@ class UploadStore
 
         return ['items' => array_map(static function (array $row): array {
             $row['size'] = (int) $row['size'];
+            $row['shareConsent'] = (bool) $row['shareConsent'];
 
             return $row;
         }, $rows), 'total' => $total];
     }
 
     /**
-     * @return array{path: string, fileName: string, mimeType: string, size: int}|null
+     * @return array{path: string, fileName: string, mimeType: string, size: int, salesChannelId: ?string}|null
      */
     public function get(string $id): ?array
     {
@@ -157,7 +164,7 @@ class UploadStore
         }
 
         $row = $this->connection->fetchAssociative(
-            'SELECT `path`, `file_name` AS fileName, `mime_type` AS mimeType, `size` FROM `nova_upload` WHERE `id` = :id',
+            'SELECT `path`, `file_name` AS fileName, `mime_type` AS mimeType, `size`, LOWER(HEX(`sales_channel_id`)) AS salesChannelId FROM `nova_upload` WHERE `id` = :id',
             ['id' => Uuid::fromHexToBytes($id)]
         );
 
@@ -165,7 +172,13 @@ class UploadStore
             return null;
         }
 
-        return ['path' => (string) $row['path'], 'fileName' => (string) $row['fileName'], 'mimeType' => (string) $row['mimeType'], 'size' => (int) $row['size']];
+        return [
+            'path' => (string) $row['path'],
+            'fileName' => (string) $row['fileName'],
+            'mimeType' => (string) $row['mimeType'],
+            'size' => (int) $row['size'],
+            'salesChannelId' => \is_string($row['salesChannelId']) && $row['salesChannelId'] !== '' ? $row['salesChannelId'] : null,
+        ];
     }
 
     /**

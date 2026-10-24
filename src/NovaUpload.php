@@ -21,6 +21,9 @@ class NovaUpload extends Plugin
     /** Feste IDs, damit Installation und Update dieselben Zusatzfelder pflegen */
     private const SET_ID = '7a1c3e0b5d9f4c2e8b6a4d1f0e9c7b5a';
     private const SET_RELATION_ID = '7a1c3e0b5d9f4c2e8b6a4d1f0e9c7b5b';
+    private const CUSTOMER_SET_ID = '7a1c3e0b5d9f4c2e8b6a4d1f0e9c7b70';
+    private const CUSTOMER_SET_RELATION_ID = '7a1c3e0b5d9f4c2e8b6a4d1f0e9c7b71';
+    private const CUSTOMER_FIELD_ID = '7a1c3e0b5d9f4c2e8b6a4d1f0e9c7b72';
     private const FIELDS = [
         'nova_upload_active' => ['id' => '7a1c3e0b5d9f4c2e8b6a4d1f0e9c7b60', 'type' => CustomFieldTypes::BOOL, 'position' => 1,
             'de' => 'Datei-Upload anbieten', 'en' => 'Offer file upload',
@@ -67,7 +70,7 @@ class NovaUpload extends Plugin
 
         $repository = $this->container?->get('custom_field_set.repository');
         if ($repository instanceof EntityRepository) {
-            $repository->delete([['id' => self::SET_ID]], $uninstallContext->getContext());
+            $repository->delete([['id' => self::SET_ID], ['id' => self::CUSTOMER_SET_ID]], $uninstallContext->getContext());
         }
 
         $connection = $this->container?->get(Connection::class);
@@ -106,6 +109,28 @@ class NovaUpload extends Plugin
             'config' => ['label' => ['de-DE' => 'Datei-Upload (Nova Upload)', 'en-GB' => 'File upload (Nova Upload)']],
             'relations' => [['id' => self::SET_RELATION_ID, 'entityName' => 'product']],
             'customFields' => $fields,
+        ], [
+            // Kunde: Zugriff auf den Download-Bereich (Mein Konto → Anfragen & Dateien)
+            'id' => self::CUSTOMER_SET_ID,
+            'name' => 'nova_upload_customer',
+            'config' => ['label' => ['de-DE' => 'Nova Upload', 'en-GB' => 'Nova Upload']],
+            'relations' => [['id' => self::CUSTOMER_SET_RELATION_ID, 'entityName' => 'customer']],
+            'customFields' => [[
+                'id' => self::CUSTOMER_FIELD_ID,
+                'name' => 'nova_upload_access',
+                'type' => CustomFieldTypes::BOOL,
+                'config' => [
+                    'label' => ['de-DE' => 'Zugriff auf Anfragen & Dateien', 'en-GB' => 'Access to requests & files'],
+                    'helpText' => [
+                        'de-DE' => 'Dieses Konto sieht unter „Mein Konto → Anfragen & Dateien“ alle hochgeladenen Dateien des Verkaufskanals – nur mit Zwei-Faktor-Anmeldung (Nova 2FA). Download-Bereich in der Plugin-Konfiguration einschalten.',
+                        'en-GB' => 'This account can download all uploaded files of the sales channel under "My account → Requests & files" – only with two-factor login (Nova 2FA).',
+                    ],
+                    'componentName' => 'sw-field',
+                    'customFieldType' => 'switch',
+                    'type' => 'switch',
+                    'customFieldPosition' => 1,
+                ],
+            ]],
         ]], $context);
     }
 }

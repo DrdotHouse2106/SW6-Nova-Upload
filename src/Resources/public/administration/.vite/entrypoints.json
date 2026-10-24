@@ -3,11 +3,11 @@
   "entryPoints": {
     "nova-upload": {
       "css": [
-        "/bundles/novaupload/administration/assets/nova-upload-YILH7AHl.css"
+        "/bundles/novaupload/administration/assets/nova-upload-BpOTYuVN.css"
       ],
       "dynamic": [],
       "js": [
-        "/bundles/novaupload/administration/assets/nova-upload--LUiiJNh.js"
+        "/bundles/novaupload/administration/assets/nova-upload-CrKF0pLb.js"
       ],
       "legacy": false,
       "preload": []
