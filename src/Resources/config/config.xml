@@ -42,10 +42,20 @@
             <name>downloadArea</name>
             <label>Download area in the customer account (with Nova 2FA)</label>
             <label lang="de-DE">Download-Bereich im Kundenkonto (mit Nova 2FA)</label>
-            <helpText lang="de-DE">Freigeschaltete Kundenkonten (Kunde → Zusatzfelder „Nova Upload: Zugriff auf Anfragen &amp; Dateien“) sehen unter „Mein Konto“ alle Anfragen mit Dateien dieses Verkaufskanals und können sie herunterladen – nur mit Passwort UND Code aus der Authenticator-App (Plugin Nova 2FA). Die Kontaktformular-Mail verlinkt dann dorthin. Für die Fertigung ohne Zugang zur Administration.</helpText>
+            <helpText lang="de-DE">Freigeschaltete Kundenkonten (Auswahl darunter oder Kunde → Zusatzfelder „Nova Upload: Zugriff auf Anfragen &amp; Dateien“) sehen unter „Mein Konto“ alle Anfragen mit Dateien dieses Verkaufskanals und können sie herunterladen – nur mit Passwort UND Code aus der Authenticator-App (Plugin Nova 2FA). Die Kontaktformular-Mail verlinkt dann dorthin. Für die Fertigung ohne Zugang zur Administration.</helpText>
             <helpText>Enabled customer accounts can list and download the request files of this sales channel under "My account" – only with password AND authenticator code (Nova 2FA plugin).</helpText>
             <defaultValue>false</defaultValue>
         </input-field>
+
+        <component name="sw-entity-multi-id-select">
+            <name>downloadCustomerIds</name>
+            <entity>customer</entity>
+            <labelProperty>email</labelProperty>
+            <label>Customers with access to the download area</label>
+            <label lang="de-DE">Kunden mit Zugriff auf den Download-Bereich</label>
+            <helpText lang="de-DE">Nach E-Mail-Adresse suchen und Kundenkonten auswählen. Diese Konten sehen unter „Mein Konto → Anfragen &amp; Dateien“ die hochgeladenen Dateien dieses Verkaufskanals – nur mit Zwei-Faktor-Anmeldung (Nova 2FA). Kein Zugang zur Administration nötig.</helpText>
+            <helpText>Search by e-mail and select customer accounts. They can download the uploaded files of this sales channel under "My account" – only with two-factor login (Nova 2FA).</helpText>
+        </component>
 
         <input-field type="bool">
             <name>contactShareConsent</name>

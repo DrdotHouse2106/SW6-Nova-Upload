@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class AccountUploadController extends StorefrontController
 {
     public const ACCESS_FIELD = 'nova_upload_access';
+    public const ACCESS_CONFIG = 'NovaUpload.config.downloadCustomerIds';
 
     /**
      * @param object|null $twoFactorGuard Nova\TwoFactor\Service\TwoFactorGuard, falls Nova 2FA installiert ist
@@ -94,8 +95,7 @@ class AccountUploadController extends StorefrontController
     private function access(Request $request, SalesChannelContext $context, CustomerEntity $customer): ?Response
     {
         $salesChannelId = $context->getSalesChannelId();
-        $fields = $customer->getCustomFields() ?? [];
-        if ($customer->getGuest() || !$this->config->getBool('NovaUpload.config.downloadArea', $salesChannelId) || empty($fields[self::ACCESS_FIELD])) {
+        if ($customer->getGuest() || !$this->config->getBool('NovaUpload.config.downloadArea', $salesChannelId) || !self::hasAccess($this->config, $customer->getId(), $customer->getCustomFields(), $salesChannelId)) {
             throw $this->createNotFoundException();
         }
 
@@ -117,5 +117,20 @@ class AccountUploadController extends StorefrontController
         }
 
         return null;
+    }
+
+    /**
+     * Zugriff über die Kundenauswahl in der Plugin-Konfiguration oder das Zusatzfeld am Kunden
+     *
+     * @param array<string, mixed>|null $customFields
+     */
+    public static function hasAccess(SystemConfigService $config, string $customerId, ?array $customFields, ?string $salesChannelId): bool
+    {
+        if (!empty($customFields[self::ACCESS_FIELD])) {
+            return true;
+        }
+        $ids = $config->get(self::ACCESS_CONFIG, $salesChannelId);
+
+        return \is_array($ids) && \in_array($customerId, $ids, true);
     }
 }

@@ -1,3 +1,6 @@
+# 1.2.0
+- New: select customers with access to the download area directly in the plugin configuration (search by e-mail); the customer custom field still works
+
 # 1.1.0
 - New: download area in the customer account for enabled accounts, protected by password and authenticator code (Nova 2FA plugin required)
 - Contact mail links to the area

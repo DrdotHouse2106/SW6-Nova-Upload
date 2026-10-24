@@ -4,7 +4,7 @@
     {{ parent() }}
 
     {% block nova_upload_sidebar_link %}
-        {% if config('NovaUpload.config.downloadArea') and context.customer.customFields.nova_upload_access|default(false) %}
+        {% if config('NovaUpload.config.downloadArea') and (context.customer.customFields.nova_upload_access|default(false) or context.customer.id in config('NovaUpload.config.downloadCustomerIds')|default([])) %}
             <a href="{{ path('frontend.nova_upload.account') }}"
                title="{{ 'novaUpload.account.title'|trans|striptags }}"
                class="list-group-item list-group-item-action account-aside-item{% if activeRoute starts with 'frontend.nova_upload.account' %} is-active{% endif %}">

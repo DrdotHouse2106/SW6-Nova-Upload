@@ -65,7 +65,7 @@ bin/console cache:clear
 
 1. Plugin **Nova 2FA** installieren (Plugin-Katalog)
 2. Nova Upload → Konfigurieren → Verkaufskanal → **„Download-Bereich im Kundenkonto (mit Nova 2FA)“** einschalten
-3. Für die Person ein Kundenkonto im Verkaufskanal anlegen (oder vorhandenes nutzen) → *Kunden → Kunde → Zusatzfelder „Nova Upload“* → **„Zugriff auf Anfragen & Dateien“** einschalten
+3. Für die Person ein Kundenkonto im Verkaufskanal anlegen (oder vorhandenes nutzen) → in der Plugin-Konfiguration unter **„Kunden mit Zugriff auf den Download-Bereich“** nach der E-Mail suchen und auswählen → Speichern (alternativ: *Kunden → Kunde → Zusatzfelder „Nova Upload“ → „Zugriff auf Anfragen & Dateien“*). Nova 2FA ab 1.2.3 nötig
 4. Die Person meldet sich im Shop an, richtet unter *Mein Konto → Zwei-Faktor-Anmeldung* die Authenticator-App ein und sieht danach *Mein Konto → Anfragen & Dateien*
 5. Die Kontaktformular-Mail enthält dann einen Link direkt zur Anfrage im Bereich
 
@@ -129,9 +129,15 @@ Shopware 6.6.x und 6.7.x · alle aktuellen Browser. Läuft mit jedem Theme; mit 
 
 ### „Anfragen & Dateien“ fehlt im Kundenkonto
 
-**Ursache:** Download-Bereich im Verkaufskanal aus, Zusatzfeld „Zugriff auf Anfragen & Dateien“ beim Kunden nicht gesetzt, oder Nova 2FA nicht installiert
+**Ursache:** Download-Bereich im Verkaufskanal aus, Kunde weder in der Konfiguration ausgewählt noch Zusatzfeld gesetzt, oder Nova 2FA nicht installiert
 
 **Lösung:** Alle drei prüfen. Ohne eingerichtete Zwei-Faktor-Anmeldung leitet der Bereich zuerst zur Einrichtung (*Mein Konto → Zwei-Faktor-Anmeldung*)
+
+### Zusatzfeld „Nova Upload“ fehlt beim Kunden
+
+**Ursache:** Das Zusatzfeld-Set wird beim Installieren/Aktualisieren angelegt; je nach Shopware-Stand erscheint es beim Kunden nicht
+
+**Lösung:** Ab 1.2.0 nicht mehr nötig – Kunden direkt in der Plugin-Konfiguration unter „Kunden mit Zugriff auf den Download-Bereich“ auswählen
 
 ### Dateien werden nicht automatisch gelöscht
 

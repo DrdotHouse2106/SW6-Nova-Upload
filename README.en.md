@@ -10,7 +10,7 @@ Files are **stored protected in the shop**: they live in Shopware's private stor
 
 - **Contact form:** Shopware's own contact form (shopping experience element "Form", type contact) gets an "Attach files" field – per sales channel.
 - **Products:** enable per product via custom fields "File upload (Nova Upload)": upload field above the add-to-cart button, optionally required, own label and hint. The same product with a different file becomes its own cart position. File names are shown in cart, checkout and the customer's orders.
-- **Download area** in the customer account for enabled accounts (e.g. production) without admin access – password plus authenticator code (Nova 2FA plugin required).
+- **Download area** in the customer account for enabled accounts (selected in the plugin configuration, e.g. production) without admin access – password plus authenticator code (Nova 2FA plugin required).
 - **Optional consent** checkbox "part may be added to the range".
 - **Required uploads in listings** show "Details" instead of "Add to cart".
 - **Administration:** *Orders → Uploads* lists all files (customer, subject/product, order number, search, filter, download, delete). Each order shows a card "Uploaded files".
