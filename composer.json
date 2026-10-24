@@ -2,7 +2,7 @@
     "name": "nova/nova-upload",
     "description": "Geschützte Datei-Uploads für Shopware 6: Kontaktformular und Artikel (z. B. Logo für individuelle Artikel)",
     "type": "shopware-platform-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "authors": [
         {
