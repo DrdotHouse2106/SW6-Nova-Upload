@@ -1,0 +1,21 @@
+{% sw_extends '@Storefront/storefront/element/cms-element-form/form-types/contact-form.html.twig' %}
+
+{# Datei-Upload – nur wenn in der Plugin-Konfiguration „Kontaktformular“ eingeschaltet #}
+{% block cms_form_contact_comment_textarea %}
+    {{ parent() }}
+
+    {% if config('NovaUpload.config.contactActive') %}
+        {% set novaMaxMb = config('NovaUpload.config.contactMaxMb') ?: 10 %}
+        {% sw_include '@NovaUpload/storefront/nova-upload/field.html.twig' with {
+            fieldId: formPrefix ~ '-nova-upload',
+            fieldName: 'novaUploadFiles[]',
+            label: 'novaUpload.contactLabel'|trans,
+            additionalClass: 'col-12',
+            limits: {
+                maxFiles: config('NovaUpload.config.contactMaxFiles') ?: 5,
+                maxMb: novaMaxMb,
+                maxTotalMb: max(novaMaxMb, config('NovaUpload.config.contactMaxTotalMb') ?: 25),
+            },
+        } %}
+    {% endif %}
+{% endblock %}

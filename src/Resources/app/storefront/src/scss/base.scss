@@ -1,0 +1,42 @@
+/* Nova Upload – Upload-Feld im Kontaktformular und auf der Produktseite.
+   Farben aus dem Nova Theme, sonst aus dem Shopware-Theme. */
+.nova-upload {
+    margin-top: .5rem;
+
+    .form-control[type='file'] {
+        padding: .625rem .75rem;
+        border-style: dashed;
+        background-color: var(--nova-surface, #f8f8f8);
+        cursor: pointer;
+
+        &::file-selector-button {
+            margin: 0;
+            margin-inline-end: .75rem;
+            padding: .375rem .875rem;
+            border: 0;
+            border-radius: var(--nova-radius-btn, .375rem);
+            background-color: var(--nova-primary, $sw-color-brand-primary);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        &:hover:not(:disabled)::file-selector-button {
+            filter: brightness(.92);
+            background-color: var(--nova-primary, $sw-color-brand-primary);
+        }
+    }
+
+    .form-text {
+        font-size: .8125rem;
+    }
+
+    .nova-upload-privacy {
+        display: block;
+        margin-top: .25rem;
+        opacity: .8;
+    }
+}
+
+.nova-upload-product {
+    margin-bottom: 1rem;
+}

@@ -1,0 +1,5 @@
+{% block sw_order_detail_details_custom_fields %}
+    <nova-upload-files v-if="orderId" :order-id="orderId" />
+
+    {% parent %}
+{% endblock %}

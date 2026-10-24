@@ -1,0 +1,20 @@
+{% block nova_upload_files %}
+<mt-card
+    v-if="items.length > 0"
+    class="nova-upload-files"
+    position-identifier="nova-upload-order-files"
+    :title="$tc('nova-upload.order.title')"
+>
+    <ul class="nova-upload-files__list">
+        <li v-for="item in items" :key="item.id">
+            <span>
+                <strong>{{ item.fileName }}</strong>
+                <span class="nova-upload__muted">· {{ size(item) }}<template v-if="item.reference"> · {{ item.reference }}</template></span>
+            </span>
+            <mt-button size="small" variant="secondary" @click="download(item)">
+                {{ $tc('nova-upload.list.download') }}
+            </mt-button>
+        </li>
+    </ul>
+</mt-card>
+{% endblock %}

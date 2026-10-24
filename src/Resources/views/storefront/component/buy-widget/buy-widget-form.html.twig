@@ -1,0 +1,24 @@
+{% sw_extends '@Storefront/storefront/component/buy-widget/buy-widget-form.html.twig' %}
+
+{# Datei-Upload beim Artikel (Zusatzfelder „Datei-Upload (Nova Upload)“ am Artikel) #}
+{% block buy_widget_buy_container %}
+    {% set novaUploadFields = product.translated.customFields %}
+    {% if buyable and novaUploadFields.nova_upload_active|default(false) %}
+        {% set novaMaxMb = config('NovaUpload.config.productMaxMb') ?: 20 %}
+        {% sw_include '@NovaUpload/storefront/nova-upload/field.html.twig' with {
+            fieldId: 'nova-upload-' ~ product.id,
+            fieldName: 'novaUpload[' ~ product.id ~ '][]',
+            label: novaUploadFields.nova_upload_label|default('') ?: 'novaUpload.productLabel'|trans,
+            hint: novaUploadFields.nova_upload_hint|default(''),
+            required: novaUploadFields.nova_upload_required|default(false),
+            additionalClass: 'nova-upload-product',
+            limits: {
+                maxFiles: config('NovaUpload.config.productMaxFiles') ?: 3,
+                maxMb: novaMaxMb,
+                maxTotalMb: max(novaMaxMb, config('NovaUpload.config.productMaxTotalMb') ?: 50),
+            },
+        } %}
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}

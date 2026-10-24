@@ -1,0 +1,25 @@
+{
+  "base": "/bundles/novaupload/administration/",
+  "entryPoints": {
+    "nova-upload": {
+      "css": [
+        "/bundles/novaupload/administration/assets/nova-upload-YILH7AHl.css"
+      ],
+      "dynamic": [],
+      "js": [
+        "/bundles/novaupload/administration/assets/nova-upload--LUiiJNh.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

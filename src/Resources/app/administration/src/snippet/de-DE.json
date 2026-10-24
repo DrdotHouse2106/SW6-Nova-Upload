@@ -1,0 +1,37 @@
+{
+    "nova-upload": {
+        "general": {
+            "title": "Uploads",
+            "description": "Hochgeladene Dateien aus Kontaktformular und Artikeln"
+        },
+        "source": {
+            "contact": "Kontaktformular",
+            "product": "Artikel"
+        },
+        "list": {
+            "intro": "Dateien aus dem Kontaktformular und von Artikeln mit Datei-Upload. Sie liegen geschützt im Shop und sind nur hier und in der jeweiligen Bestellung abrufbar.",
+            "retention": "Abgelaufene Dateien werden täglich automatisch gelöscht – Fristen unter Erweiterungen → Nova Upload → Konfigurieren.",
+            "search": "Suchen: Dateiname, Kunde, E-Mail, Betreff, Artikel oder Bestellnummer …",
+            "allSources": "Alle Herkünfte",
+            "count": "{count} Datei | {count} Dateien",
+            "date": "Datum",
+            "file": "Datei",
+            "source": "Herkunft",
+            "customer": "Kunde",
+            "reference": "Betreff / Artikel",
+            "order": "Bestellung",
+            "noOrder": "noch keine Bestellung",
+            "download": "Herunterladen",
+            "delete": "Löschen",
+            "deleteConfirm": "Datei „{name}“ endgültig löschen?",
+            "deleted": "Datei gelöscht.",
+            "empty": "Keine Dateien gefunden.",
+            "loadError": "Uploads konnten nicht geladen werden.",
+            "downloadError": "Datei konnte nicht heruntergeladen werden.",
+            "deleteError": "Datei konnte nicht gelöscht werden."
+        },
+        "order": {
+            "title": "Hochgeladene Dateien"
+        }
+    }
+}

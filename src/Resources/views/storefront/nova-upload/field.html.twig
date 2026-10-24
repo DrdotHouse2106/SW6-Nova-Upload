@@ -1,0 +1,33 @@
+{# Upload-Feld – genutzt im Kontaktformular und auf der Produktseite.
+   Erwartet: fieldId, fieldName, label, hint (optional), required (optional), limits {maxFiles, maxMb, maxTotalMb} #}
+{% block nova_upload_field %}
+    {% set novaAccept = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif', 'tif', 'tiff', 'bmp', 'svg', 'ai', 'eps', 'psd', 'cdr', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'odt', 'ods', 'csv', 'txt', 'rtf', 'zip', 'stl', '3mf', 'obj', 'step', 'stp', 'iges', 'igs', 'amf', 'ply', 'wrl', 'x3d', 'dxf', 'dwg'] %}
+    <div class="form-group nova-upload{{ additionalClass is defined ? ' ' ~ additionalClass : '' }}">
+        <label class="form-label" for="{{ fieldId }}">
+            {{ label }}{% if required|default(false) %}*{% endif %}
+        </label>
+        <input type="file"
+               class="form-control"
+               id="{{ fieldId }}"
+               name="{{ fieldName }}"
+               multiple
+               {% if required|default(false) %}required{% endif %}
+               accept=".{{ novaAccept|join(',.') }}"
+               aria-describedby="{{ fieldId }}-hint"
+               data-nova-upload="true"
+               data-nova-max-files="{{ limits.maxFiles }}"
+               data-nova-max-mb="{{ limits.maxMb }}"
+               data-nova-max-total-mb="{{ limits.maxTotalMb }}"
+               data-nova-error-count="{{ 'novaUpload.errorCount'|trans({'%count%': limits.maxFiles})|e('html_attr') }}"
+               data-nova-error-size="{{ 'novaUpload.errorSize'|trans({'%size%': limits.maxMb})|e('html_attr') }}"
+               data-nova-error-total="{{ 'novaUpload.errorTotal'|trans({'%size%': limits.maxTotalMb})|e('html_attr') }}">
+        <div class="form-text" id="{{ fieldId }}-hint">
+            {% if hint|default('') is not empty %}
+                {{ hint }}
+            {% else %}
+                {{ 'novaUpload.hint'|trans({'%count%': limits.maxFiles, '%size%': limits.maxMb})|sw_sanitize }}
+            {% endif %}
+            <span class="nova-upload-privacy">{{ 'novaUpload.privacy'|trans|sw_sanitize }}</span>
+        </div>
+    </div>
+{% endblock %}

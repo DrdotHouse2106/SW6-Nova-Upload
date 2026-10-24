@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Contact form</title>
+        <title lang="de-DE">Kontaktformular</title>
+
+        <input-field type="bool">
+            <name>contactActive</name>
+            <label>File uploads in the contact form</label>
+            <label lang="de-DE">Datei-Upload im Kontaktformular</label>
+            <helpText lang="de-DE">Ergänzt Shopwares Kontaktformular (Erlebniswelt-Element „Formular“, Typ Kontakt) um ein Upload-Feld. Die Dateien werden geschützt im Shop gespeichert; die Mail an den Shop enthält nur die Dateinamen und einen Link in die Administration (Bestellungen → Uploads).</helpText>
+            <helpText>Adds an upload field to Shopware's contact form (shopping experience element "Form", type contact). Files are stored protected in the shop; the mail to the shop only contains file names and a link to the administration.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>contactMaxFiles</name>
+            <label>Max. number of files</label>
+            <label lang="de-DE">Max. Anzahl Dateien</label>
+            <defaultValue>5</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>contactMaxMb</name>
+            <label>Max. size per file (MB)</label>
+            <label lang="de-DE">Max. Größe je Datei (MB)</label>
+            <helpText lang="de-DE">PHP-Grenzen upload_max_filesize und post_max_size auf dem Server beachten.</helpText>
+            <helpText>Note the PHP limits upload_max_filesize and post_max_size on the server.</helpText>
+            <defaultValue>10</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>contactMaxTotalMb</name>
+            <label>Max. total size (MB)</label>
+            <label lang="de-DE">Max. Gesamtgröße (MB)</label>
+            <defaultValue>25</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>mailNotice</name>
+            <label>Notice in the contact mail</label>
+            <label lang="de-DE">Hinweis in der Kontaktformular-Mail</label>
+            <helpText lang="de-DE">Hängt an die Kontaktformular-Mail an den Shop die Dateinamen und einen Link in die Administration an.</helpText>
+            <helpText>Appends file names and a link to the administration to the contact mail to the shop.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Products</title>
+        <title lang="de-DE">Artikel</title>
+
+        <input-field type="int">
+            <name>productMaxFiles</name>
+            <label>Max. number of files per product</label>
+            <label lang="de-DE">Max. Anzahl Dateien je Artikel</label>
+            <helpText lang="de-DE">Der Upload wird pro Artikel eingeschaltet: Artikel → Spezifikationen → Zusatzfelder „Datei-Upload (Nova Upload)“.</helpText>
+            <helpText>The upload is enabled per product: product → Specifications → Custom fields "File upload (Nova Upload)".</helpText>
+            <defaultValue>3</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>productMaxMb</name>
+            <label>Max. size per file (MB)</label>
+            <label lang="de-DE">Max. Größe je Datei (MB)</label>
+            <defaultValue>20</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>productMaxTotalMb</name>
+            <label>Max. total size (MB)</label>
+            <label lang="de-DE">Max. Gesamtgröße (MB)</label>
+            <defaultValue>50</defaultValue>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Retention</title>
+        <title lang="de-DE">Aufbewahrung</title>
+
+        <input-field type="int">
+            <name>keepDaysContact</name>
+            <label>Delete contact form files after (days)</label>
+            <label lang="de-DE">Dateien aus dem Kontaktformular löschen nach (Tagen)</label>
+            <helpText lang="de-DE">0 = behalten.</helpText>
+            <helpText>0 = keep.</helpText>
+            <defaultValue>180</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>keepDaysOpen</name>
+            <label>Delete product files without order after (days)</label>
+            <label lang="de-DE">Artikel-Dateien ohne Bestellung löschen nach (Tagen)</label>
+            <helpText lang="de-DE">Dateien aus Warenkörben, aus denen keine Bestellung wurde. 0 = behalten.</helpText>
+            <helpText>Files from carts that never became an order. 0 = keep.</helpText>
+            <defaultValue>14</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>keepDaysOrder</name>
+            <label>Delete product files of orders after (days)</label>
+            <label lang="de-DE">Artikel-Dateien von Bestellungen löschen nach (Tagen)</label>
+            <helpText lang="de-DE">Gezählt ab der Bestellung. 0 = behalten (z. B. für Nachbestellungen).</helpText>
+            <helpText>Counted from the order. 0 = keep (e.g. for repeat orders).</helpText>
+            <defaultValue>0</defaultValue>
+        </input-field>
+    </card>
+</config>

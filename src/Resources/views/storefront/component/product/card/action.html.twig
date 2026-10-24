@@ -1,0 +1,10 @@
+{% sw_extends '@Storefront/storefront/component/product/card/action.html.twig' %}
+
+{# Artikel mit Pflicht-Upload: in Listen „Details“ statt „In den Warenkorb“ – die Datei wird auf der Produktseite gewählt #}
+{% block component_product_box_action_buttons %}
+    {% if product.translated.customFields.nova_upload_active|default(false) and product.translated.customFields.nova_upload_required|default(false) %}
+        {{ block('component_product_box_action_detail') }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

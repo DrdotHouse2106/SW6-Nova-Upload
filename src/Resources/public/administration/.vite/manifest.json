@@ -1,0 +1,11 @@
+{
+  "main.js": {
+    "file": "assets/nova-upload--LUiiJNh.js",
+    "name": "nova-upload",
+    "src": "main.js",
+    "isEntry": true,
+    "css": [
+      "assets/nova-upload-YILH7AHl.css"
+    ]
+  }
+}

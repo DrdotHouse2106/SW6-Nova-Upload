@@ -1,0 +1,37 @@
+{
+    "nova-upload": {
+        "general": {
+            "title": "Uploads",
+            "description": "Uploaded files from contact form and products"
+        },
+        "source": {
+            "contact": "Contact form",
+            "product": "Product"
+        },
+        "list": {
+            "intro": "Files from the contact form and from products with file upload. They are stored protected in the shop and can only be accessed here and in the respective order.",
+            "retention": "Expired files are deleted automatically every day – retention periods under Extensions → Nova Upload → Configure.",
+            "search": "Search: file name, customer, e-mail, subject, product or order number …",
+            "allSources": "All sources",
+            "count": "{count} file | {count} files",
+            "date": "Date",
+            "file": "File",
+            "source": "Source",
+            "customer": "Customer",
+            "reference": "Subject / product",
+            "order": "Order",
+            "noOrder": "no order yet",
+            "download": "Download",
+            "delete": "Delete",
+            "deleteConfirm": "Delete file \"{name}\" permanently?",
+            "deleted": "File deleted.",
+            "empty": "No files found.",
+            "loadError": "Uploads could not be loaded.",
+            "downloadError": "File could not be downloaded.",
+            "deleteError": "File could not be deleted."
+        },
+        "order": {
+            "title": "Uploaded files"
+        }
+    }
+}

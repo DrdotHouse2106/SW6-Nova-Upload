@@ -1,0 +1,15 @@
+{% sw_extends '@Storefront/storefront/component/line-item/type/product.html.twig' %}
+
+{# Hochgeladene Dateien unter dem Artikelnamen (Warenkorb, Bestellübersicht, Bestellungen im Konto) #}
+{% block component_line_item_type_product_label %}
+    {{ parent() }}
+
+    {% if lineItem.payload.novaUpload is defined and lineItem.payload.novaUpload is not empty %}
+        <div class="line-item-details-characteristics nova-upload-files">
+            {{ 'novaUpload.lineItemFiles'|trans|sw_sanitize }}
+            {% for file in lineItem.payload.novaUpload %}
+                <span class="line-item-details-characteristics-option">{{ file.name }}</span>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

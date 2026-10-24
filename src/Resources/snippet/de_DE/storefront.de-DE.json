@@ -1,0 +1,20 @@
+{
+    "novaUpload": {
+        "contactLabel": "Dateien anhängen (optional)",
+        "productLabel": "Datei hochladen",
+        "hint": "Fotos, Grafiken (z. B. SVG, PDF, AI), Zeichnungen oder 3D-Dateien (z. B. STL, 3MF, STEP) – bis zu %count% Dateien, je max. %size% MB.",
+        "privacy": "Die Dateien werden geschützt gespeichert und nur für Ihre Anfrage bzw. Bestellung verwendet.",
+        "lineItemFiles": "Datei:",
+        "errorCount": "Bitte höchstens %count% Dateien anhängen.",
+        "errorFailed": "Die Datei „%name%“ konnte nicht hochgeladen werden – vermutlich ist sie zu groß.",
+        "errorType": "Der Dateityp von „%name%“ ist nicht erlaubt.",
+        "errorSize": "Die Datei „%name%“ ist größer als %size% MB.",
+        "errorTotal": "Die Dateien sind zusammen größer als %size% MB.",
+        "errorRequired": "Bitte laden Sie für diesen Artikel eine Datei hoch.",
+        "errorStore": "Die Datei konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+        "mail": {
+            "headline": "Hochgeladene Dateien",
+            "text": "Die Dateien sind geschützt im Shop gespeichert: Administration → Bestellungen → Uploads"
+        }
+    }
+}

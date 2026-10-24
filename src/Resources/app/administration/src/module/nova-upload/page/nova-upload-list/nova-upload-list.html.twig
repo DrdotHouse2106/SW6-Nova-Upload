@@ -1,0 +1,111 @@
+{% block nova_upload_list %}
+<sw-page class="nova-upload-list">
+    <template #smart-bar-header>
+        <h2>{{ $tc('nova-upload.general.title') }}</h2>
+    </template>
+
+    <template #content>
+        <div class="nova-upload__content">
+            <p class="nova-upload__intro">{{ $tc('nova-upload.list.intro') }}</p>
+
+            <mt-card position-identifier="nova-upload-list">
+                <div class="nova-upload__toolbar">
+                    <input
+                        v-model="term"
+                        type="search"
+                        class="nova-upload__search"
+                        :placeholder="$tc('nova-upload.list.search')"
+                        @input="onSearch"
+                    >
+                    <select v-model="source" class="nova-upload__select" @change="onFilter">
+                        <option value="">{{ $tc('nova-upload.list.allSources') }}</option>
+                        <option value="contact">{{ $tc('nova-upload.source.contact') }}</option>
+                        <option value="product">{{ $tc('nova-upload.source.product') }}</option>
+                    </select>
+                    <span class="nova-upload__count">{{ $tc('nova-upload.list.count', total, { count: total }) }}</span>
+                </div>
+
+                <sw-loader v-if="isLoading" />
+
+                <div class="nova-upload__scroll">
+                    <table class="nova-upload__table">
+                        <thead>
+                            <tr>
+                                <th>{{ $tc('nova-upload.list.date') }}</th>
+                                <th>{{ $tc('nova-upload.list.file') }}</th>
+                                <th>{{ $tc('nova-upload.list.source') }}</th>
+                                <th>{{ $tc('nova-upload.list.customer') }}</th>
+                                <th>{{ $tc('nova-upload.list.reference') }}</th>
+                                <th>{{ $tc('nova-upload.list.order') }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in items" :key="item.id">
+                                <td class="nova-upload__nowrap">{{ date(item) }}</td>
+                                <td>
+                                    <strong>{{ item.fileName }}</strong>
+                                    <div class="nova-upload__muted">{{ size(item) }}</div>
+                                </td>
+                                <td>
+                                    {{ $tc(`nova-upload.source.${item.source}`) }}
+                                    <div v-if="salesChannels[item.salesChannelId]" class="nova-upload__muted">{{ salesChannels[item.salesChannelId] }}</div>
+                                </td>
+                                <td>
+                                    {{ item.customerName || '–' }}
+                                    <div v-if="item.customerEmail" class="nova-upload__muted">
+                                        <a :href="`mailto:${item.customerEmail}`">{{ item.customerEmail }}</a>
+                                    </div>
+                                </td>
+                                <td>{{ item.reference || '–' }}</td>
+                                <td>
+                                    <a v-if="item.orderId" href="#" @click.prevent="openOrder(item)">{{ item.orderNumber }}</a>
+                                    <span v-else-if="item.source === 'product'" class="nova-upload__muted">{{ $tc('nova-upload.list.noOrder') }}</span>
+                                    <span v-else>–</span>
+                                </td>
+                                <td class="nova-upload__actions">
+                                    <mt-button size="small" variant="secondary" @click="download(item)">
+                                        {{ $tc('nova-upload.list.download') }}
+                                    </mt-button>
+                                    <mt-button
+                                        v-if="acl.can('order.deleter')"
+                                        size="small"
+                                        variant="critical"
+                                        @click="deleteItem = item"
+                                    >
+                                        {{ $tc('nova-upload.list.delete') }}
+                                    </mt-button>
+                                </td>
+                            </tr>
+                            <tr v-if="!isLoading && items.length === 0">
+                                <td colspan="7" class="nova-upload__empty">{{ $tc('nova-upload.list.empty') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div v-if="pages > 1" class="nova-upload__pager">
+                    <mt-button size="small" variant="secondary" :disabled="page <= 1" @click="goTo(page - 1)">‹</mt-button>
+                    <span>{{ page }} / {{ pages }}</span>
+                    <mt-button size="small" variant="secondary" :disabled="page >= pages" @click="goTo(page + 1)">›</mt-button>
+                </div>
+            </mt-card>
+
+            <p class="nova-upload__intro">{{ $tc('nova-upload.list.retention') }}</p>
+        </div>
+
+        <sw-modal
+            v-if="deleteItem"
+            :title="$tc('nova-upload.list.delete')"
+            variant="small"
+            @modal-close="deleteItem = null"
+        >
+            <p>{{ $tc('nova-upload.list.deleteConfirm', 0, { name: deleteItem.fileName }) }}</p>
+            <template #modal-footer>
+                <mt-button size="small" variant="secondary" @click="deleteItem = null">{{ $tc('global.default.cancel') }}</mt-button>
+                <mt-button size="small" variant="critical" @click="confirmDelete">{{ $tc('nova-upload.list.delete') }}</mt-button>
+            </template>
+        </sw-modal>
+    </template>
+</sw-page>
+{% endblock %}

@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Nova\Upload\Service\UploadRules">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="translator"/>
+        </service>
+
+        <!-- Privates Dateisystem des Plugins: files/plugins/nova_upload (nicht öffentlich erreichbar) -->
+        <service id="Nova\Upload\Service\UploadStore" public="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="nova_upload.filesystem.private"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="logger"/>
+        </service>
+
+        <service id="Nova\Upload\Subscriber\ContactUploadSubscriber">
+            <argument type="service" id="Nova\Upload\Service\UploadRules"/>
+            <argument type="service" id="Nova\Upload\Service\UploadStore"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="logger"/>
+            <tag name="kernel.event_subscriber"/>
+            <tag name="kernel.reset" method="reset"/>
+        </service>
+
+        <service id="Nova\Upload\Subscriber\ProductUploadSubscriber">
+            <argument type="service" id="Nova\Upload\Service\UploadRules"/>
+            <argument type="service" id="Nova\Upload\Service\UploadStore"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="logger"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="Nova\Upload\Controller\AdminUploadController" public="true">
+            <argument type="service" id="Nova\Upload\Service\UploadStore"/>
+            <argument type="service" id="logger"/>
+        </service>
+
+        <service id="Nova\Upload\ScheduledTask\UploadCleanupTask">
+            <tag name="shopware.scheduled.task"/>
+        </service>
+
+        <service id="Nova\Upload\ScheduledTask\UploadCleanupTaskHandler">
+            <argument type="service" id="scheduled_task.repository"/>
+            <argument type="service" id="logger"/>
+            <argument type="service" id="Nova\Upload\Service\UploadStore"/>
+            <tag name="messenger.message_handler"/>
+        </service>
+    </services>
+</container>
