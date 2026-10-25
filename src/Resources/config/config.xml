@@ -38,6 +38,26 @@
             <defaultValue>25</defaultValue>
         </input-field>
 
+        <input-field type="text">
+            <name>contactLabel</name>
+            <label>Field label (optional)</label>
+            <label lang="de-DE">Bezeichnung des Upload-Feldes (optional)</label>
+            <placeholder>Dateien anhängen (optional)</placeholder>
+            <placeholder lang="de-DE">Dateien anhängen (optional)</placeholder>
+            <helpText lang="de-DE">Eigene Bezeichnung für diesen Verkaufskanal, z. B. „Fotos anhängen (optional)“. Leer = Standardtext.</helpText>
+            <helpText>Own label for this sales channel. Empty = default text.</helpText>
+        </input-field>
+
+        <input-field type="textarea">
+            <name>contactHint</name>
+            <label>Hint below the field (optional)</label>
+            <label lang="de-DE">Hinweis unter dem Upload-Feld (optional)</label>
+            <placeholder>Photos, graphics, drawings or 3D files – up to %count% files, max. %size% MB each.</placeholder>
+            <placeholder lang="de-DE">Fotos, Grafiken, Zeichnungen oder 3D-Dateien – bis zu %count% Dateien, je max. %size% MB.</placeholder>
+            <helpText lang="de-DE">Eigener Hinweis für diesen Verkaufskanal, z. B. „Fotos vom Einbauort (JPG, PNG, HEIC) – bis zu %count% Dateien, je max. %size% MB.“ Platzhalter: %count% = max. Anzahl, %size% = max. MB je Datei. Leer = Standardtext. Erlaubt bleiben alle Dateitypen der Liste.</helpText>
+            <helpText>Own hint for this sales channel. Placeholders: %count% = max. files, %size% = max. MB per file. Empty = default text.</helpText>
+        </input-field>
+
         <input-field type="bool">
             <name>downloadArea</name>
             <label>Download area in the customer account (with Nova 2FA)</label>

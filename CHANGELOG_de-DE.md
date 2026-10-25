@@ -1,3 +1,6 @@
+# 1.3.0
+- Neu: **Bezeichnung und Hinweis des Upload-Feldes im Kontaktformular pro Verkaufskanal** einstellbar (z. B. „Fotos vom Einbauort …“ statt des allgemeinen Textes mit 3D-Dateien). Platzhalter `%count%` und `%size%`; leer = Standardtext
+
 # 1.2.0
 - Neu: **Kunden mit Zugriff direkt in der Plugin-Konfiguration auswählen** (Feld „Kunden mit Zugriff auf den Download-Bereich“, Suche nach E-Mail) – das Zusatzfeld am Kunden ist nicht mehr nötig, funktioniert aber weiter
 - Passend dazu Nova 2FA ab 1.2.3: ausgewählte Kunden können die Zwei-Faktor-Anmeldung einrichten

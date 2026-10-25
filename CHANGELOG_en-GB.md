@@ -1,3 +1,6 @@
+# 1.3.0
+- New: contact form upload label and hint per sales channel (placeholders %count%, %size%)
+
 # 1.2.0
 - New: select customers with access to the download area directly in the plugin configuration (search by e-mail); the customer custom field still works
 

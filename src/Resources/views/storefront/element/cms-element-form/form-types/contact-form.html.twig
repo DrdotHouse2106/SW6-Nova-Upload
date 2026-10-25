@@ -6,13 +6,17 @@
 
     {% if config('NovaUpload.config.contactActive') %}
         {% set novaMaxMb = config('NovaUpload.config.contactMaxMb') ?: 10 %}
+        {% set novaMaxFiles = config('NovaUpload.config.contactMaxFiles') ?: 5 %}
+        {% set novaLabel = config('NovaUpload.config.contactLabel')|default('')|trim %}
+        {% set novaHint = config('NovaUpload.config.contactHint')|default('')|trim %}
         {% sw_include '@NovaUpload/storefront/nova-upload/field.html.twig' with {
             fieldId: formPrefix ~ '-nova-upload',
             fieldName: 'novaUploadFiles[]',
-            label: 'novaUpload.contactLabel'|trans,
+            label: novaLabel is not empty ? novaLabel : 'novaUpload.contactLabel'|trans,
+            hint: novaHint|replace({'%count%': novaMaxFiles, '%size%': novaMaxMb}),
             additionalClass: 'col-12',
             limits: {
-                maxFiles: config('NovaUpload.config.contactMaxFiles') ?: 5,
+                maxFiles: novaMaxFiles,
                 maxMb: novaMaxMb,
                 maxTotalMb: max(novaMaxMb, config('NovaUpload.config.contactMaxTotalMb') ?: 25),
             },

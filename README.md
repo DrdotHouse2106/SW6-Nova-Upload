@@ -61,6 +61,8 @@ bin/console cache:clear
 2. In der Erlebniswelt der Anfrage-Seite ein Element **Formular** einfügen, Typ **Kontakt**, Empfänger eintragen
 3. Cache leeren und eine Testanfrage mit Datei absenden – die Datei erscheint unter *Bestellungen → Uploads*
 
+**Eigener Text je Shop:** In der Konfiguration (Verkaufskanal wählen) unter „Bezeichnung des Upload-Feldes“ und „Hinweis unter dem Upload-Feld“ z. B. für einen Dämmstoff-Shop „Fotos anhängen (optional)“ und „Fotos vom Einbauort (JPG, PNG, HEIC) – bis zu %count% Dateien, je max. %size% MB.“ eintragen. Die erlaubten Dateitypen ändern sich dadurch nicht
+
 ### Download-Bereich für die Fertigung (ohne Admin-Zugang)
 
 1. Plugin **Nova 2FA** installieren (Plugin-Katalog)
@@ -84,6 +86,7 @@ bin/console cache:clear
 |---|---|---|
 | Kontaktformular | Datei-Upload im Kontaktformular | aus |
 | | Max. Anzahl Dateien / Größe je Datei / Gesamtgröße | 5 / 10 MB / 25 MB |
+| | Bezeichnung und Hinweis des Upload-Feldes (pro Verkaufskanal, Platzhalter `%count%`/`%size%`) | leer = Standardtext |
 | | Hinweis in der Kontaktformular-Mail (Dateinamen + Link) | an |
 | | Download-Bereich im Kundenkonto (mit Nova 2FA) | aus |
 | | Freiwillige Zustimmung: Teil darf ins Sortiment | aus |
