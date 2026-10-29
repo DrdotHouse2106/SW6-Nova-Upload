@@ -24,6 +24,18 @@ class UploadRules
         'stl', '3mf', 'obj', 'step', 'stp', 'iges', 'igs', 'amf', 'ply', 'wrl', 'x3d', 'dxf', 'dwg',
     ];
 
+    /** Endungen, deren Inhalt sicher erkannt wird – der Inhalt muss dazu passen */
+    private const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tif', 'tiff', 'heic', 'heif'];
+    private const PDF_MIME = ['application/pdf', 'application/x-pdf', 'application/octet-stream'];
+
+    /** Web- und Programminhalte, unabhängig von der Endung nie erlaubt */
+    private const FORBIDDEN_MIME = [
+        'text/html', 'application/xhtml+xml', 'text/javascript', 'application/javascript', 'application/x-javascript',
+        'text/x-php', 'application/x-php', 'application/x-httpd-php', 'text/x-shellscript', 'application/x-sh',
+        'application/x-msdownload', 'application/x-dosexec', 'application/vnd.microsoft.portable-executable',
+        'application/x-executable', 'application/x-sharedlib', 'application/x-mach-binary', 'application/java-archive',
+    ];
+
     public function __construct(
         private readonly SystemConfigService $config,
         private readonly TranslatorInterface $translator,
@@ -74,7 +86,8 @@ class UploadRules
                 return $this->translator->trans('novaUpload.errorFailed', ['%name%' => $name]);
             }
 
-            if (!\in_array(mb_strtolower($file->getClientOriginalExtension()), self::EXTENSIONS, true)) {
+            $extension = mb_strtolower($file->getClientOriginalExtension());
+            if (!\in_array($extension, self::EXTENSIONS, true) || !self::contentMatches($file, $extension)) {
                 return $this->translator->trans('novaUpload.errorType', ['%name%' => $name]);
             }
 
@@ -115,6 +128,50 @@ class UploadRules
         $raw = \is_array($raw) ? $raw : [$raw];
 
         return array_values(array_filter($raw, static fn ($file): bool => $file instanceof UploadedFile));
+    }
+
+    /**
+     * Inhalt passt zur Endung: keine Web-/Programmdateien, Bilder und PDF mit passendem Typ,
+     * SVG ohne Skripte. Unbekannte Typen (CAD, 3D, Grafikformate) bleiben erlaubt.
+     */
+    public static function contentMatches(UploadedFile $file, string $extension): bool
+    {
+        if ($extension === 'svg') {
+            $content = @file_get_contents($file->getPathname());
+
+            return \is_string($content) && !self::svgHasScript($content);
+        }
+
+        try {
+            $mime = $file->getMimeType();
+        } catch (\Throwable) {
+            $mime = null;
+        }
+
+        if ($mime === null || $mime === '') {
+            return true;
+        }
+
+        $mime = mb_strtolower($mime);
+        if (\in_array($mime, self::FORBIDDEN_MIME, true)) {
+            return false;
+        }
+
+        if (\in_array($extension, self::IMAGE_EXTENSIONS, true)) {
+            // HEIC wird je nach Server nicht erkannt
+            return str_starts_with($mime, 'image/') || (\in_array($extension, ['heic', 'heif'], true) && $mime === 'application/octet-stream');
+        }
+
+        if ($extension === 'pdf') {
+            return \in_array($mime, self::PDF_MIME, true);
+        }
+
+        return true;
+    }
+
+    public static function svgHasScript(string $content): bool
+    {
+        return (bool) preg_match('/<\s*(script|foreignObject|iframe|embed|object)\b|javascript\s*:|\son[a-z]+\s*=/i', $content);
     }
 
     /** Dateiname ohne Pfad und Sonderzeichen – sicher für Mail, Download und Anzeige */

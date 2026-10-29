@@ -49,6 +49,23 @@ class UploadStore
             }
         }
 
+        try {
+            $this->insertRow($id, $source, $salesChannelId, $path, $name, $file, $meta);
+        } catch (\Throwable $e) {
+            // Keine verwaiste Datei ohne Datensatz zurücklassen (die findet der Cleanup nie)
+            $this->deleteFile($path);
+
+            throw $e;
+        }
+
+        return ['id' => $id, 'name' => $name];
+    }
+
+    /**
+     * @param array{customerName?: ?string, customerEmail?: ?string, reference?: ?string, productId?: ?string, lineItemId?: ?string, shareConsent?: bool} $meta
+     */
+    private function insertRow(string $id, string $source, ?string $salesChannelId, string $path, string $name, UploadedFile $file, array $meta): void
+    {
         $this->connection->insert('nova_upload', [
             'id' => Uuid::fromHexToBytes($id),
             'source' => $source,
@@ -65,19 +82,41 @@ class UploadStore
             'line_item_id' => $meta['lineItemId'] ?? null,
             'created_at' => $this->now(),
         ]);
-
-        return ['id' => $id, 'name' => $name];
     }
 
     /**
      * Uploads aus dem Warenkorb der Bestellung zuordnen (ab dann gilt die Aufbewahrung für Bestellungen).
+     * Zugeordnet wird nur, was beim Hinzufügen für genau diese Position gespeichert wurde.
      *
-     * @param list<string> $uploadIds
+     * @param array<string, string> $uploads Upload-ID => ID der Warenkorb-Position
      */
-    public function assignOrder(array $uploadIds, string $orderId, string $orderNumber, ?string $customerName, ?string $customerEmail): void
+    public function assignOrder(array $uploads, string $orderId, string $orderNumber, ?string $customerName, ?string $customerEmail, ?string $salesChannelId = null): void
     {
-        $ids = array_values(array_filter($uploadIds, static fn (string $id): bool => Uuid::isValid($id)));
+        $ids = array_values(array_filter(array_map('strval', array_keys($uploads)), static fn (string $id): bool => Uuid::isValid($id)));
         if ($ids === []) {
+            return;
+        }
+
+        $rows = $this->connection->fetchAllAssociative(
+            "SELECT LOWER(HEX(`id`)) AS id, `line_item_id` AS lineItemId, LOWER(HEX(`sales_channel_id`)) AS salesChannelId
+             FROM `nova_upload` WHERE `id` IN (:ids) AND `source` = 'product' AND `order_id` IS NULL",
+            ['ids' => Uuid::fromHexToBytesList($ids)],
+            ['ids' => ArrayParameterType::BINARY]
+        );
+
+        $matched = [];
+        foreach ($rows as $row) {
+            $id = (string) $row['id'];
+            if ((string) $row['lineItemId'] === '' || !hash_equals((string) $row['lineItemId'], (string) ($uploads[$id] ?? ''))) {
+                continue;
+            }
+            if ($salesChannelId !== null && $row['salesChannelId'] !== null && $row['salesChannelId'] !== $salesChannelId) {
+                continue;
+            }
+            $matched[] = $id;
+        }
+
+        if ($matched === []) {
             return;
         }
 
@@ -91,10 +130,45 @@ class UploadStore
                 'now' => $this->now(),
                 'name' => $this->cut($customerName),
                 'email' => $this->cut($customerEmail),
-                'ids' => Uuid::fromHexToBytesList($ids),
+                'ids' => Uuid::fromHexToBytesList($matched),
             ],
             ['ids' => ArrayParameterType::BINARY]
         );
+    }
+
+    /** Gesamtgröße der Artikel-Uploads, die noch keiner Bestellung zugeordnet sind (Bytes) */
+    public function openProductBytes(): int
+    {
+        return (int) $this->connection->fetchOne("SELECT COALESCE(SUM(`size`), 0) FROM `nova_upload` WHERE `source` = 'product' AND `order_id` IS NULL");
+    }
+
+    /**
+     * Kundenkonto gelöscht: Anfragen und Warenkorb-Dateien dieser E-Mail-Adresse löschen.
+     * Dateien von Bestellungen bleiben bei der Bestellung (eigene Frist bzw. Löschung mit der Bestellung).
+     */
+    public function deleteForEmail(string $email): int
+    {
+        $email = trim($email);
+        if ($email === '') {
+            return 0;
+        }
+
+        return $this->deleteWhere('`customer_email` = :email AND `order_id` IS NULL', ['email' => $email]);
+    }
+
+    /**
+     * Bestellungen gelöscht: deren Dateien löschen.
+     *
+     * @param list<string> $orderIds
+     */
+    public function deleteForOrders(array $orderIds): int
+    {
+        $ids = array_values(array_filter($orderIds, static fn (string $id): bool => Uuid::isValid($id)));
+        if ($ids === []) {
+            return 0;
+        }
+
+        return $this->deleteWhere('`order_id` IN (:ids)', ['ids' => Uuid::fromHexToBytesList($ids)], ['ids' => ArrayParameterType::BINARY]);
     }
 
     /**
@@ -225,7 +299,7 @@ class UploadStore
                 // Artikel-Uploads ohne Bestellung (Warenkorb verlassen)
                 ['days' => $this->days('keepDaysOpen', $salesChannelId, 14), 'where' => "`source` = 'product' AND `order_id` IS NULL", 'column' => '`created_at`'],
                 // Artikel-Uploads einer Bestellung (0 = behalten)
-                ['days' => $this->days('keepDaysOrder', $salesChannelId, 0), 'where' => "`source` = 'product' AND `order_id` IS NOT NULL", 'column' => '`assigned_at`'],
+                ['days' => $this->days('keepDaysOrder', $salesChannelId, 730), 'where' => "`source` = 'product' AND `order_id` IS NOT NULL", 'column' => '`assigned_at`'],
             ];
 
             foreach ($rules as $rule) {
@@ -234,16 +308,7 @@ class UploadStore
                 }
 
                 $before = (new \DateTimeImmutable())->modify('-' . $rule['days'] . ' days')->format('Y-m-d H:i:s.v');
-                $rows = $this->connection->fetchAllAssociative(
-                    'SELECT `id`, `path` FROM `nova_upload` WHERE ' . $channelWhere . ' AND ' . $rule['where'] . ' AND ' . $rule['column'] . ' < :before LIMIT 500',
-                    $params + ['before' => $before]
-                );
-
-                foreach ($rows as $row) {
-                    $this->deleteFile((string) $row['path']);
-                    $this->connection->delete('nova_upload', ['id' => $row['id']]);
-                    ++$deleted;
-                }
+                $deleted += $this->deleteWhere($channelWhere . ' AND ' . $rule['where'] . ' AND ' . $rule['column'] . ' < :before', $params + ['before' => $before]);
             }
         }
 
@@ -258,6 +323,33 @@ class UploadStore
         } catch (\Throwable $e) {
             $this->logger->warning('Nova Upload: Dateien konnten nicht gelöscht werden', ['exception' => $e]);
         }
+    }
+
+    /**
+     * Löscht Dateien und Einträge in Blöcken zu 500 (höchstens 50 Blöcke je Aufruf).
+     *
+     * @param array<string, mixed> $params
+     * @param array<string, ArrayParameterType> $types
+     */
+    private function deleteWhere(string $where, array $params, array $types = []): int
+    {
+        $deleted = 0;
+
+        for ($round = 0; $round < 50; ++$round) {
+            $rows = $this->connection->fetchAllAssociative('SELECT `id`, `path` FROM `nova_upload` WHERE ' . $where . ' LIMIT 500', $params, $types);
+
+            foreach ($rows as $row) {
+                $this->deleteFile((string) $row['path']);
+                $this->connection->delete('nova_upload', ['id' => $row['id']]);
+                ++$deleted;
+            }
+
+            if (\count($rows) < 500) {
+                break;
+            }
+        }
+
+        return $deleted;
     }
 
     private function deleteFile(string $path): void

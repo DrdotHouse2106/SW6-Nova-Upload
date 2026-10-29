@@ -2,6 +2,7 @@
 
 namespace Nova\Upload\Subscriber;
 
+use Nova\Upload\Service\UploadQuota;
 use Nova\Upload\Service\UploadRules;
 use Nova\Upload\Service\UploadStore;
 use Psr\Log\LoggerInterface;
@@ -38,6 +39,8 @@ class ProductUploadSubscriber implements EventSubscriberInterface
     public const CF_ACTIVE = 'nova_upload_active';
     public const CF_REQUIRED = 'nova_upload_required';
 
+    private ?UploadQuota $quota = null;
+
     /**
      * @param EntityRepository<ProductCollection> $productRepository
      */
@@ -50,10 +53,16 @@ class ProductUploadSubscriber implements EventSubscriberInterface
     ) {
     }
 
+    public function setQuota(UploadQuota $quota): void
+    {
+        $this->quota = $quota;
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::CONTROLLER => 'onController',
+            // Nach Shopwares Kontext-Auflösung (-10), vor der Scope-Prüfung (-20)
+            KernelEvents::CONTROLLER => ['onController', -15],
             CheckoutOrderPlacedEvent::class => 'onOrderPlaced',
         ];
     }
@@ -71,12 +80,26 @@ class ProductUploadSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // Upload-Angaben im Payload setzt nur dieser Subscriber, nie der Browser
+        $stripped = false;
+        foreach ($lineItems as $key => $item) {
+            if (\is_array($item) && \is_array($item['payload'] ?? null) && \array_key_exists(self::PAYLOAD, $item['payload'])) {
+                unset($item['payload'][self::PAYLOAD]);
+                $lineItems[$key] = $item;
+                $stripped = true;
+            }
+        }
+        if ($stripped) {
+            $request->request->set('lineItems', $lineItems);
+        }
+
         $products = $this->uploadProducts($lineItems, $context);
         if ($products === []) {
             return;
         }
 
         $salesChannelId = $context->getSalesChannelId();
+        $fileCount = 0;
 
         // Erst alles prüfen, dann speichern
         foreach ($products as $key => $product) {
@@ -92,6 +115,14 @@ class ProductUploadSubscriber implements EventSubscriberInterface
 
                 return;
             }
+
+            $fileCount += \count($files);
+        }
+
+        if ($fileCount > 0 && $this->quota !== null && !$this->quota->acceptProductUploads($request, $fileCount, $salesChannelId)) {
+            $this->fail($event, $request, $this->rules->trans('novaUpload.errorQuota'));
+
+            return;
         }
 
         foreach ($products as $key => $product) {
@@ -123,7 +154,7 @@ class ProductUploadSubscriber implements EventSubscriberInterface
     public function onOrderPlaced(CheckoutOrderPlacedEvent $event): void
     {
         $order = $event->getOrder();
-        $ids = [];
+        $map = [];
 
         foreach ($order->getLineItems() ?? [] as $lineItem) {
             $uploads = $lineItem->getPayload()[self::PAYLOAD] ?? null;
@@ -133,12 +164,13 @@ class ProductUploadSubscriber implements EventSubscriberInterface
 
             foreach ($uploads as $upload) {
                 if (\is_array($upload) && \is_string($upload['id'] ?? null)) {
-                    $ids[] = $upload['id'];
+                    // Nur Uploads, die beim Hinzufügen genau für diese Position gespeichert wurden
+                    $map[$upload['id']] = $lineItem->getIdentifier();
                 }
             }
         }
 
-        if ($ids === []) {
+        if ($map === []) {
             return;
         }
 
@@ -146,7 +178,7 @@ class ProductUploadSubscriber implements EventSubscriberInterface
         $name = $customer !== null ? trim($customer->getFirstName() . ' ' . $customer->getLastName()) : null;
 
         try {
-            $this->store->assignOrder($ids, $order->getId(), (string) $order->getOrderNumber(), $name, $customer?->getEmail());
+            $this->store->assignOrder($map, $order->getId(), (string) $order->getOrderNumber(), $name, $customer?->getEmail(), $order->getSalesChannelId());
         } catch (\Throwable $e) {
             $this->logger->error('Nova Upload: Uploads konnten der Bestellung nicht zugeordnet werden', ['order' => $order->getOrderNumber(), 'exception' => $e]);
         }

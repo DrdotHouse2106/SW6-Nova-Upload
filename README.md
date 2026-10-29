@@ -18,9 +18,9 @@ Die Dateien werden **geschützt im Shop gespeichert**: Sie liegen im privaten Sp
 | **Prüfung** | Anzahl, Größe je Datei und Gesamtgröße werden schon im Browser und noch einmal auf dem Server geprüft. Nur erlaubte Dateitypen (siehe unten) |
 | **Download-Bereich im Kundenkonto** | Für freigeschaltete Konten (z. B. Fertigung, Partner) ohne Zugang zur Administration: *Mein Konto → Anfragen & Dateien* zeigt alle Dateien des Verkaufskanals zum Herunterladen. **Nur mit Passwort und Code aus der Authenticator-App** (Plugin [Nova 2FA](https://github.com/DrdotHouse2106/SW6-Nova-2FA)) |
 | **Freigabe fürs Sortiment** | Optionales, freiwilliges Häkchen im Kontaktformular: „Teil darf ins Sortiment aufgenommen werden“. Die Zustimmung steht in der Mail, im Download-Bereich und in der Administration |
-| **Aufbewahrung** | Automatisches Löschen nach einstellbaren Fristen: Anfragen (Standard 180 Tage), Dateien aus Warenkörben ohne Bestellung (14 Tage), Dateien von Bestellungen (Standard: behalten) |
+| **Aufbewahrung** | Automatisches Löschen nach einstellbaren Fristen: Anfragen (Standard 180 Tage), Dateien aus Warenkörben ohne Bestellung (14 Tage), Dateien von Bestellungen (Standard 730 Tage). Wird ein Kundenkonto gelöscht, werden dessen Anfragen und Warenkorb-Dateien mitgelöscht; wird eine Bestellung gelöscht, ihre Dateien |
 
-**Erlaubte Dateitypen:** Bilder (JPG, PNG, GIF, WebP, HEIC, TIFF, BMP, SVG), Grafik (AI, EPS, PSD, CDR), Dokumente (PDF, Word, Excel, OpenDocument, CSV, TXT, RTF), ZIP sowie 3D/CAD (STL, 3MF, OBJ, STEP/STP, IGES/IGS, AMF, PLY, WRL, X3D, DXF, DWG). Programmdateien, Skripte und HTML werden abgelehnt.
+**Erlaubte Dateitypen:** Bilder (JPG, PNG, GIF, WebP, HEIC, TIFF, BMP, SVG), Grafik (AI, EPS, PSD, CDR), Dokumente (PDF, Word, Excel, OpenDocument, CSV, TXT, RTF), ZIP sowie 3D/CAD (STL, 3MF, OBJ, STEP/STP, IGES/IGS, AMF, PLY, WRL, X3D, DXF, DWG). Programmdateien, Skripte und HTML werden abgelehnt – auch mit erlaubter Endung: Bilder und PDF müssen inhaltlich zur Endung passen, SVG darf keine Skripte enthalten.
 
 ## Sicherheit und Datenschutz
 
@@ -31,6 +31,8 @@ Die Dateien werden **geschützt im Shop gespeichert**: Sie liegen im privaten Sp
 - **Download-Bereich** für Konten ohne Admin-Zugang nur mit Passwort **und** Authenticator-Code (Nova 2FA), nur Dateien des eigenen Verkaufskanals, keine öffentlichen Datei-Links.
 - **Automatisches Löschen** nach den eingestellten Fristen (Datenminimierung). Unter dem Upload-Feld steht ein kurzer Hinweis für Kunden; in der Datenschutzerklärung sollte der Upload erwähnt werden (Zweck: Bearbeitung der Anfrage bzw. Bestellung, Speicherdauer wie eingestellt).
 - Dateinamen werden bereinigt (keine Pfade oder Sonderzeichen).
+- **Schutz vor Missbrauch** bei Artikel-Uploads (ohne Anmeldung möglich): höchstens 20 Dateien je Besucher (IP-Adresse) und Stunde, und neue Uploads werden abgelehnt, solange Dateien aus Warenkörben ohne Bestellung zusammen 2048 MB belegen (beides einstellbar).
+- Einer Bestellung werden nur Dateien zugeordnet, die beim Hinzufügen genau für diese Warenkorb-Position gespeichert wurden.
 
 ## Installation
 
@@ -91,9 +93,11 @@ bin/console cache:clear
 | | Download-Bereich im Kundenkonto (mit Nova 2FA) | aus |
 | | Freiwillige Zustimmung: Teil darf ins Sortiment | aus |
 | Artikel | Max. Anzahl Dateien / Größe je Datei / Gesamtgröße | 3 / 20 MB / 50 MB |
+| | Max. Dateien je Besucher und Stunde | 20 (0 = keine Grenze) |
+| | Max. Gesamtgröße der Artikel-Dateien ohne Bestellung | 2048 MB (0 = keine Grenze) |
 | Aufbewahrung | Dateien aus dem Kontaktformular löschen nach | 180 Tagen |
 | | Artikel-Dateien ohne Bestellung löschen nach | 14 Tagen |
-| | Artikel-Dateien von Bestellungen löschen nach | 0 = behalten |
+| | Artikel-Dateien von Bestellungen löschen nach | 730 Tagen (0 = behalten) |
 
 ## Entwicklung
 

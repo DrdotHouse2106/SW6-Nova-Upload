@@ -12,6 +12,7 @@
         "errorTotal": "The files are larger than %size% MB in total.",
         "errorRequired": "Please upload a file for this product.",
         "errorStore": "The file could not be saved. Please try again.",
+        "errorQuota": "No further files can be accepted at the moment. Please try again later or contact us.",
         "mail": {
             "headline": "Uploaded files",
             "text": "The files are stored securely in the shop: Administration → Orders → Uploads",

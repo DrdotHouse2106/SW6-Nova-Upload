@@ -122,6 +122,24 @@
             <label lang="de-DE">Max. Gesamtgröße (MB)</label>
             <defaultValue>50</defaultValue>
         </input-field>
+
+        <input-field type="int">
+            <name>productUploadsPerHour</name>
+            <label>Max. files per visitor and hour</label>
+            <label lang="de-DE">Max. Dateien je Besucher und Stunde</label>
+            <helpText lang="de-DE">Schutz vor Missbrauch: so viele Artikel-Dateien darf ein Besucher (gleiche IP-Adresse) je Stunde hochladen. 0 = keine Grenze.</helpText>
+            <helpText>Abuse protection: number of product files a visitor (same IP address) may upload per hour. 0 = no limit.</helpText>
+            <defaultValue>20</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>productOpenMaxMb</name>
+            <label>Max. total size of product files without order (MB)</label>
+            <label lang="de-DE">Max. Gesamtgröße der Artikel-Dateien ohne Bestellung (MB)</label>
+            <helpText lang="de-DE">Schutz des Speicherplatzes: Ist diese Summe aller Dateien in Warenkörben (noch ohne Bestellung, alle Verkaufskanäle) erreicht, werden neue Artikel-Uploads abgelehnt, bis die Aufbewahrungsfrist alte Dateien gelöscht hat. 0 = keine Grenze.</helpText>
+            <helpText>Storage protection: once the total of all files in carts (without order, all sales channels) reaches this size, new product uploads are rejected until the retention period removes old files. 0 = no limit.</helpText>
+            <defaultValue>2048</defaultValue>
+        </input-field>
     </card>
 
     <card>
@@ -150,9 +168,9 @@
             <name>keepDaysOrder</name>
             <label>Delete product files of orders after (days)</label>
             <label lang="de-DE">Artikel-Dateien von Bestellungen löschen nach (Tagen)</label>
-            <helpText lang="de-DE">Gezählt ab der Bestellung. 0 = behalten (z. B. für Nachbestellungen).</helpText>
-            <helpText>Counted from the order. 0 = keep (e.g. for repeat orders).</helpText>
-            <defaultValue>0</defaultValue>
+            <helpText lang="de-DE">Gezählt ab der Bestellung. Standard 730 Tage (2 Jahre, deckt Gewährleistung und Nachbestellungen ab). 0 = unbegrenzt behalten. Wird eine Bestellung gelöscht, werden ihre Dateien mitgelöscht.</helpText>
+            <helpText>Counted from the order. Default 730 days (2 years, covers warranty and repeat orders). 0 = keep forever. Deleting an order also deletes its files.</helpText>
+            <defaultValue>730</defaultValue>
         </input-field>
     </card>
 </config>

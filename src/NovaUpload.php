@@ -11,6 +11,7 @@ use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 use Shopware\Core\Framework\Plugin\Context\UpdateContext;
 use Shopware\Core\System\CustomField\CustomFieldTypes;
+use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -53,6 +54,10 @@ class NovaUpload extends Plugin
     {
         parent::update($updateContext);
         $this->upsertCustomFields($updateContext->getContext());
+
+        if (version_compare($updateContext->getCurrentPluginVersion(), '1.4.0', '<')) {
+            $this->setDefaultOrderRetention();
+        }
     }
 
     public function uninstall(UninstallContext $uninstallContext): void
@@ -76,6 +81,24 @@ class NovaUpload extends Plugin
         $connection = $this->container?->get(Connection::class);
         if ($connection instanceof Connection) {
             $connection->executeStatement('DROP TABLE IF EXISTS `nova_upload`');
+        }
+    }
+
+    /**
+     * Ab 1.4.0: Bestell-Dateien nicht mehr unbegrenzt behalten. Nur wenn bisher „0 = behalten“
+     * bzw. nichts eingestellt war; eine eigene Frist bleibt. Einmalig beim Update auf 1.4.0.
+     */
+    private function setDefaultOrderRetention(): void
+    {
+        $config = $this->container?->get(SystemConfigService::class, ContainerInterface::NULL_ON_INVALID_REFERENCE);
+        if (!$config instanceof SystemConfigService) {
+            return;
+        }
+
+        $key = 'NovaUpload.config.keepDaysOrder';
+        $value = $config->get($key);
+        if ($value === null || $value === '' || (is_numeric($value) && (int) $value === 0)) {
+            $config->set($key, 730);
         }
     }
 

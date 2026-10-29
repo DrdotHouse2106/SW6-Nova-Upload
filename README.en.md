@@ -15,11 +15,11 @@ Files are **stored protected in the shop**: they live in Shopware's private stor
 - **Required uploads in listings** show "Details" instead of "Add to cart".
 - **Administration:** *Orders → Uploads* lists all files (customer, subject/product, order number, search, filter, download, delete). Each order shows a card "Uploaded files".
 - **Validation** of count, size per file and total size in the browser and on the server; only allowed types (images, graphics, documents, ZIP, 3D/CAD – no executables, scripts or HTML).
-- **Retention:** contact files 180 days, files from carts without order 14 days, order files kept (all configurable).
+- **Retention:** contact files 180 days, files from carts without order 14 days, order files 730 days (all configurable). Deleting a customer account removes its requests and cart files; deleting an order removes its files.
 
 ## Security
 
-Private file system (`files/plugins/nova_upload/`), stored without extension under a random ID, download only for admin users with "view orders" (always as attachment), delete with "delete orders", no mail attachments, sanitized file names, automatic deletion.
+Private file system (`files/plugins/nova_upload/`), stored without extension under a random ID, download only for admin users with "view orders" (always as attachment), delete with "delete orders", no mail attachments, sanitized file names, automatic deletion. Content must match the extension for images and PDF, SVG must not contain scripts. Product uploads are limited to 20 files per visitor (IP) and hour and to 2048 MB of files in carts without order (configurable).
 
 ## Installation
 

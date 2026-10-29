@@ -33,6 +33,25 @@
             <argument type="service" id="product.repository"/>
             <argument type="service" id="router"/>
             <argument type="service" id="logger"/>
+            <call method="setQuota">
+                <argument type="service" id="Nova\Upload\Service\UploadQuota"/>
+            </call>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Kontingent für Artikel-Uploads (Dateien je IP und Stunde, Gesamtgröße offener Uploads) -->
+        <service id="Nova\Upload\Service\UploadQuota">
+            <argument type="service" id="cache.rate_limiter"/>
+            <argument type="service" id="Nova\Upload\Service\UploadStore"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="logger"/>
+        </service>
+
+        <!-- Löschkopplung: Kundenkonto bzw. Bestellung gelöscht -->
+        <service id="Nova\Upload\Subscriber\DeleteUploadSubscriber">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Nova\Upload\Service\UploadStore"/>
+            <argument type="service" id="logger"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 

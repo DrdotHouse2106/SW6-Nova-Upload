@@ -12,6 +12,7 @@
         "errorTotal": "Die Dateien sind zusammen größer als %size% MB.",
         "errorRequired": "Bitte laden Sie für diesen Artikel eine Datei hoch.",
         "errorStore": "Die Datei konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+        "errorQuota": "Im Moment können keine weiteren Dateien angenommen werden. Bitte versuchen Sie es später erneut oder kontaktieren Sie uns.",
         "mail": {
             "headline": "Hochgeladene Dateien",
             "text": "Die Dateien sind geschützt im Shop gespeichert: Administration → Bestellungen → Uploads",
