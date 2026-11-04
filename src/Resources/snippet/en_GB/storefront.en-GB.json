@@ -7,6 +7,7 @@
         "lineItemFiles": "File:",
         "errorCount": "Please attach at most %count% files.",
         "errorFailed": "The file \"%name%\" could not be uploaded – it is probably too large.",
+        "errorSvg": "\"%name%\" cannot be accepted: the SVG file contains parts that are not allowed (e.g. scripts, a DOCTYPE declaration or references to external files). Please send it as PDF or PNG or export it as a plain SVG without DOCTYPE.",
         "errorType": "The file type of \"%name%\" is not allowed.",
         "errorSize": "The file \"%name%\" is larger than %size% MB.",
         "errorTotal": "The files are larger than %size% MB in total.",

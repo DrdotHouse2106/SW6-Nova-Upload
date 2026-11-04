@@ -1,3 +1,9 @@
+# 1.4.1
+- Security: **new SVG check** – SVG is parsed as XML (without network access and without entity substitution) instead of a text search and only accepted without DOCTYPE/entities, scripts, `foreignObject`, animations, event attributes (`on…`), processing instructions and references to external files/addresses. Obfuscation via character references (`&#x61;`) no longer works. Rejected SVG files get their own explanatory message
+- Security: images need the signature and exactly the type of their format (instead of any `image/*` – an SVG named .jpg is rejected); PDF must start with `%PDF-` (unknown binary data no longer counts as PDF); SVG content is rejected under other extensions
+- Product upload quota: additionally at most 200 MB per visitor (IP) and hour (configurable); when the total limit of open uploads is reached, open files older than 3 days are deleted early, otherwise uploads are rejected and the administration is notified (at most every 6 hours)
+- Unit tests for the content check
+
 # 1.4.0
 - Fixed: product file upload did not take effect (the check ran before Shopware resolved the sales channel). Files are validated and stored again, "File is required" now blocks adding without a file
 - Security: quota for product uploads – max. 20 files per visitor (IP) and hour, new uploads are rejected while cart files without order exceed 2048 MB (both configurable, 0 = no limit)

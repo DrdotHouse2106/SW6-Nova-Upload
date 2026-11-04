@@ -19,7 +19,7 @@ Files are **stored protected in the shop**: they live in Shopware's private stor
 
 ## Security
 
-Private file system (`files/plugins/nova_upload/`), stored without extension under a random ID, download only for admin users with "view orders" (always as attachment), delete with "delete orders", no mail attachments, sanitized file names, automatic deletion. Content must match the extension for images and PDF, SVG must not contain scripts. Product uploads are limited to 20 files per visitor (IP) and hour and to 2048 MB of files in carts without order (configurable).
+Private file system (`files/plugins/nova_upload/`), stored without extension under a random ID, download only for admin users with "view orders" (always as attachment), delete with "delete orders", no mail attachments, sanitized file names, automatic deletion. Content must match the extension: images need the matching signature and exactly the matching type, PDF must start with `%PDF-`; SVG is parsed as XML and only accepted without DOCTYPE/entities, scripts, `foreignObject`, animations, event attributes (`on…`) and external references (when in doubt it is rejected). Product uploads are limited to 20 files and 200 MB per visitor (IP) and hour and to 2048 MB of files in carts without order; when that total is reached, open files older than 3 days are deleted early, otherwise uploads are rejected and the administration is notified (all configurable).
 
 ## Installation
 

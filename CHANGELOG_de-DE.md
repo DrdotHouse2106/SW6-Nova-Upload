@@ -1,3 +1,9 @@
+# 1.4.1
+- Sicherheit: **SVG-Prüfung neu** – SVG wird als XML geparst (ohne Netzwerkzugriff und ohne Entity-Ersetzung) statt per Textsuche und nur angenommen ohne DOCTYPE/Entities, Skripte, `foreignObject`, Animationen, Ereignis-Attribute (`on…`), Verarbeitungsanweisungen und Verweise auf externe Dateien/Adressen. Verschleierungen über Zeichenreferenzen (`&#x61;`) greifen nicht mehr. Abgelehnte SVG bekommen einen eigenen, erklärenden Hinweis
+- Sicherheit: Bilder müssen die zum Format passende Signatur und genau den passenden Typ haben (statt beliebigem `image/*` – ein SVG mit Endung .jpg wird abgelehnt); PDF muss mit `%PDF-` beginnen (unbekannte Binärdaten gelten nicht mehr als PDF); SVG-Inhalt wird in anderen Endungen abgelehnt
+- Kontingent für Artikel-Uploads: zusätzlich höchstens 200 MB je Besucher (IP) und Stunde (einstellbar); ist die Gesamtgrenze offener Uploads erreicht, werden zuerst offene Dateien älter als 3 Tage vorzeitig gelöscht, sonst wird abgelehnt und die Administration benachrichtigt (höchstens alle 6 Stunden)
+- Unit-Tests für die Inhaltsprüfung
+
 # 1.4.0
 - Behoben: **Datei-Upload bei Artikeln griff nicht** – die Prüfung lief, bevor Shopware den Verkaufskanal kannte. Jetzt werden Dateien wieder geprüft und gespeichert, und „Datei ist Pflicht“ verhindert das Hinzufügen ohne Datei
 - Sicherheit: **Kontingent für Artikel-Uploads** – höchstens 20 Dateien je Besucher (IP) und Stunde, neue Uploads werden abgelehnt, solange Dateien aus Warenkörben ohne Bestellung zusammen 2048 MB belegen (beides einstellbar, 0 = keine Grenze)

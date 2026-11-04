@@ -133,11 +133,20 @@
         </input-field>
 
         <input-field type="int">
+            <name>productUploadMbPerHour</name>
+            <label>Max. megabytes per visitor and hour</label>
+            <label lang="de-DE">Max. Megabyte je Besucher und Stunde</label>
+            <helpText lang="de-DE">Schutz vor Missbrauch: so viele MB Artikel-Dateien darf ein Besucher (gleiche IP-Adresse) je Stunde hochladen. Verhindert, dass wenige Besucher die Gesamtgrenze schnell füllen. 0 = keine Grenze.</helpText>
+            <helpText>Abuse protection: megabytes of product files a visitor (same IP address) may upload per hour. Prevents a few visitors from quickly filling the total limit. 0 = no limit.</helpText>
+            <defaultValue>200</defaultValue>
+        </input-field>
+
+        <input-field type="int">
             <name>productOpenMaxMb</name>
             <label>Max. total size of product files without order (MB)</label>
             <label lang="de-DE">Max. Gesamtgröße der Artikel-Dateien ohne Bestellung (MB)</label>
-            <helpText lang="de-DE">Schutz des Speicherplatzes: Ist diese Summe aller Dateien in Warenkörben (noch ohne Bestellung, alle Verkaufskanäle) erreicht, werden neue Artikel-Uploads abgelehnt, bis die Aufbewahrungsfrist alte Dateien gelöscht hat. 0 = keine Grenze.</helpText>
-            <helpText>Storage protection: once the total of all files in carts (without order, all sales channels) reaches this size, new product uploads are rejected until the retention period removes old files. 0 = no limit.</helpText>
+            <helpText lang="de-DE">Schutz des Speicherplatzes: Ist diese Summe aller Dateien in Warenkörben (noch ohne Bestellung, alle Verkaufskanäle) erreicht, werden zuerst offene Dateien älter als 3 Tage vorzeitig gelöscht; reicht das nicht, werden neue Artikel-Uploads abgelehnt und die Administration benachrichtigt. 0 = keine Grenze.</helpText>
+            <helpText>Storage protection: once the total of all files in carts (without order, all sales channels) reaches this size, open files older than 3 days are deleted early; if that is not enough, new product uploads are rejected and the administration is notified. 0 = no limit.</helpText>
             <defaultValue>2048</defaultValue>
         </input-field>
     </card>

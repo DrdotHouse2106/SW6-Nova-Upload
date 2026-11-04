@@ -143,6 +143,17 @@ class UploadStore
     }
 
     /**
+     * Notbereinigung bei voller Gesamtgrenze: offene Artikel-Uploads (ohne Bestellung), die älter
+     * als die angegebene Zahl Stunden sind, vorzeitig löschen.
+     */
+    public function deleteOpenProductOlderThan(int $hours): int
+    {
+        $before = (new \DateTimeImmutable())->modify('-' . max(1, $hours) . ' hours')->format('Y-m-d H:i:s.v');
+
+        return $this->deleteWhere("`source` = 'product' AND `order_id` IS NULL AND `created_at` < :before", ['before' => $before]);
+    }
+
+    /**
      * Kundenkonto gelöscht: Anfragen und Warenkorb-Dateien dieser E-Mail-Adresse löschen.
      * Dateien von Bestellungen bleiben bei der Bestellung (eigene Frist bzw. Löschung mit der Bestellung).
      */

@@ -39,12 +39,13 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <!-- Kontingent für Artikel-Uploads (Dateien je IP und Stunde, Gesamtgröße offener Uploads) -->
+        <!-- Kontingent für Artikel-Uploads (Dateien und MB je IP und Stunde, Gesamtgröße offener Uploads) -->
         <service id="Nova\Upload\Service\UploadQuota">
             <argument type="service" id="cache.rate_limiter"/>
             <argument type="service" id="Nova\Upload\Service\UploadStore"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="logger"/>
+            <argument type="service" id="notification.repository" on-invalid="null"/>
         </service>
 
         <!-- Löschkopplung: Kundenkonto bzw. Bestellung gelöscht -->

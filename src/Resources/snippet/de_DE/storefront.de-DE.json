@@ -7,6 +7,7 @@
         "lineItemFiles": "Datei:",
         "errorCount": "Bitte höchstens %count% Dateien anhängen.",
         "errorFailed": "Die Datei „%name%“ konnte nicht hochgeladen werden – vermutlich ist sie zu groß.",
+        "errorSvg": "„%name%“ kann nicht angenommen werden: Die SVG-Datei enthält nicht erlaubte Bestandteile (z. B. Skripte, eine DOCTYPE-Angabe oder Verweise auf externe Dateien). Bitte als PDF oder PNG senden oder als einfaches SVG ohne DOCTYPE exportieren.",
         "errorType": "Der Dateityp von „%name%“ ist nicht erlaubt.",
         "errorSize": "Die Datei „%name%“ ist größer als %size% MB.",
         "errorTotal": "Die Dateien sind zusammen größer als %size% MB.",

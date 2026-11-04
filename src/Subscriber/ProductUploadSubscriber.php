@@ -100,6 +100,7 @@ class ProductUploadSubscriber implements EventSubscriberInterface
 
         $salesChannelId = $context->getSalesChannelId();
         $fileCount = 0;
+        $byteCount = 0;
 
         // Erst alles prüfen, dann speichern
         foreach ($products as $key => $product) {
@@ -117,9 +118,12 @@ class ProductUploadSubscriber implements EventSubscriberInterface
             }
 
             $fileCount += \count($files);
+            foreach ($files as $file) {
+                $byteCount += max(0, (int) $file->getSize());
+            }
         }
 
-        if ($fileCount > 0 && $this->quota !== null && !$this->quota->acceptProductUploads($request, $fileCount, $salesChannelId)) {
+        if ($fileCount > 0 && $this->quota !== null && !$this->quota->acceptProductUploads($request, $fileCount, $salesChannelId, $byteCount)) {
             $this->fail($event, $request, $this->rules->trans('novaUpload.errorQuota'));
 
             return;
