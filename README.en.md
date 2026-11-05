@@ -45,6 +45,10 @@ Scheduled tasks must run for automatic deletion.
 - **Upload field missing on the product page:** enable the custom field on the main product; the field is only shown where the buy button is.
 - **Files are not deleted:** scheduled tasks are not running (`nova_upload.cleanup`).
 
+## How this plugin was made
+
+This plugin was developed with the help of AI (Claude by Anthropic). The requirements come from running several Shopware shops day to day; the code was written and revised with AI. It is checked with automated tests and static analysis (where present in the repository), regular security reviews of the code and in production use in the author's own shops. Still: use at your own risk and without warranty (see license). Please report bugs and suggestions as an issue. More background: [SW6-Nova-Plugins](https://github.com/DrdotHouse2106/SW6-Nova-Plugins).
+
 ## License
 
 MIT
