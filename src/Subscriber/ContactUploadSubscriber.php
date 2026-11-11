@@ -113,7 +113,12 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
             }
         }
 
-        $this->adminUrl = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/admin#/nova/upload/index';
+        // Feste Admin-Adresse aus der Konfiguration (eine Anmeldung für alle Shops), sonst die Domain des Shops
+        $adminBase = rtrim(trim($this->config->getString('NovaUpload.config.adminUrl')), '/');
+        if (!preg_match('#^https://[^\s"<>]+$#', $adminBase)) {
+            $adminBase = $request->getSchemeAndHttpHost() . $request->getBasePath() . '/admin';
+        }
+        $this->adminUrl = $adminBase . '#/nova/upload/index';
         // Adresse des Verkaufskanals (inkl. Sprach-Pfad) für den Link in den Download-Bereich
         $base = $request->attributes->get('sw-sales-channel-absolute-base-url');
         $this->shopUrl = rtrim(\is_string($base) && $base !== '' ? $base : $request->getSchemeAndHttpHost() . $request->getBasePath(), '/');

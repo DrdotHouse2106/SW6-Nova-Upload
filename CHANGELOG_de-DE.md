@@ -1,3 +1,6 @@
+# 1.5.1
+- Neu: **„Adresse der Administration für den Link in der Mail“** (z. B. https://www.example.de/admin). Bisher führte der Link immer auf die Domain des Shops, aus dem die Anfrage kam – bei mehreren Shops in einer Installation musste man sich dort neu anmelden. Leer = wie bisher
+
 # 1.5.0
 - Neu: **Dateien als Anhang an der Kontaktformular-Mail** an den Shop (Einstellung „Dateien an die Kontaktformular-Mail anhängen“, Standard aus; Grenze „Anhänge höchstens insgesamt“ Standard 15 MB – größere Dateien bleiben nur im Shop, die Mail nennt sie). Nie an die Kopie für den Absender. So lässt sich eine Anfrage einfach weiterleiten
 - Neu: **„Download-Bereich nur mit Authenticator-Code“** (Standard an). Aus: Passwort genügt; wer die Zwei-Faktor-Anmeldung freiwillig eingerichtet hat, bestätigt weiterhin den Code

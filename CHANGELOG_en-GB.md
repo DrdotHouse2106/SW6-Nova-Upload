@@ -1,3 +1,6 @@
+# 1.5.1
+- New: **"Administration address for the link in the mail"**. Previously the link always used the domain of the shop the request came from – with several shops in one installation you had to log in again. Empty = as before
+
 # 1.5.0
 - New: **files attached to the contact mail** to the shop (setting, default off; total limit default 15 MB – larger files stay in the shop, the mail lists them). Never attached to the sender copy
 - New: **"Download area only with authenticator code"** (default on). Off: password is enough; customers with voluntary two-factor login still confirm the code

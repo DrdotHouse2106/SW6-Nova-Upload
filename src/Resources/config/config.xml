@@ -104,6 +104,15 @@
             <defaultValue>true</defaultValue>
         </input-field>
 
+        <input-field type="text">
+            <name>adminUrl</name>
+            <label>Administration address for the link in the mail</label>
+            <label lang="de-DE">Adresse der Administration für den Link in der Mail</label>
+            <placeholder>https://www.example.de/admin</placeholder>
+            <helpText lang="de-DE">Leer = Domain des jeweiligen Shops (…/admin). Bei mehreren Shops in einer Installation die Adresse eintragen, unter der Sie sich sonst anmelden – dann bleibt die Anmeldung erhalten. Nur https.</helpText>
+            <helpText>Empty = domain of the respective shop (…/admin). With several shops in one installation enter the address you usually log in with, so the session is kept. https only.</helpText>
+        </input-field>
+
         <input-field type="bool">
             <name>mailAttachments</name>
             <label>Attach files to the contact mail</label>
