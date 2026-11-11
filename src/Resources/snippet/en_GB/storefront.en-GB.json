@@ -19,7 +19,8 @@
             "text": "The files are stored securely in the shop: Administration → Orders → Uploads",
             "consentYes": "Range approval: YES – the customer agrees that the part may be added to the range.",
             "consentNo": "Range approval: no",
-            "area": "Available for enabled accounts with two-factor login under \"My account → Requests & files\":"
+            "area": "Available for enabled accounts with two-factor login under \"My account → Requests & files\":",
+            "tooLarge": "Too large to attach, stored in the shop only:"
         },
         "shareConsent": "Optional: I agree that the part from my request may be added to the product range so that others can benefit too.",
         "account": {

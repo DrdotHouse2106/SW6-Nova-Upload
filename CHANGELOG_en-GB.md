@@ -1,3 +1,7 @@
+# 1.5.0
+- New: **files attached to the contact mail** to the shop (setting, default off; total limit default 15 MB – larger files stay in the shop, the mail lists them). Never attached to the sender copy
+- New: **"Download area only with authenticator code"** (default on). Off: password is enough; customers with voluntary two-factor login still confirm the code
+
 # 1.4.2
 - Fixed: the link in the contact form mail (administration and download area) showed only the **first** file when several were uploaded. It now contains all file IDs of the request (comma-separated) and the list shows all of them
 

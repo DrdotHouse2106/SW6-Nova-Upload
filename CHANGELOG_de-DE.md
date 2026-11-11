@@ -1,3 +1,7 @@
+# 1.5.0
+- Neu: **Dateien als Anhang an der Kontaktformular-Mail** an den Shop (Einstellung „Dateien an die Kontaktformular-Mail anhängen“, Standard aus; Grenze „Anhänge höchstens insgesamt“ Standard 15 MB – größere Dateien bleiben nur im Shop, die Mail nennt sie). Nie an die Kopie für den Absender. So lässt sich eine Anfrage einfach weiterleiten
+- Neu: **„Download-Bereich nur mit Authenticator-Code“** (Standard an). Aus: Passwort genügt; wer die Zwei-Faktor-Anmeldung freiwillig eingerichtet hat, bestätigt weiterhin den Code
+
 # 1.4.2
 - Behoben: Der Link in der Mail zum Kontaktformular (Administration und Download-Bereich) zeigte bei mehreren Dateien nur die **erste** Datei. Jetzt enthält er alle Datei-IDs der Anfrage (mit Komma getrennt), die Liste zeigt alle Dateien dieser Anfrage
 

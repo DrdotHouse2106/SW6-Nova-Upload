@@ -87,12 +87,39 @@
         </input-field>
 
         <input-field type="bool">
+            <name>downloadRequire2fa</name>
+            <label>Download area only with authenticator code</label>
+            <label lang="de-DE">Download-Bereich nur mit Authenticator-Code</label>
+            <helpText lang="de-DE">An (empfohlen): Zugang nur mit Passwort und Code aus der Authenticator-App (Nova 2FA). Aus: Passwort genügt; wer die Zwei-Faktor-Anmeldung freiwillig eingerichtet hat, wird weiterhin nach dem Code gefragt.</helpText>
+            <helpText>On (recommended): access only with password and authenticator code (Nova 2FA). Off: password is enough; customers who set up two-factor login voluntarily are still asked for the code.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
             <name>mailNotice</name>
             <label>Notice in the contact mail</label>
             <label lang="de-DE">Hinweis in der Kontaktformular-Mail</label>
             <helpText lang="de-DE">Hängt an die Kontaktformular-Mail an den Shop die Dateinamen und einen Link in die Administration an.</helpText>
             <helpText>Appends file names and a link to the administration to the contact mail to the shop.</helpText>
             <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>mailAttachments</name>
+            <label>Attach files to the contact mail</label>
+            <label lang="de-DE">Dateien an die Kontaktformular-Mail anhängen</label>
+            <helpText lang="de-DE">Die hochgeladenen Dateien hängen zusätzlich als Anhang an der Mail an den Shop – so lässt sich die Anfrage einfach weiterleiten. Nicht an die Kopie für den Absender. Größere Dateien als die Grenze unten bleiben nur im Shop (Hinweis in der Mail).</helpText>
+            <helpText>Uploaded files are also attached to the mail to the shop, so the request can simply be forwarded. Not to the sender copy. Files beyond the limit below stay in the shop only (notice in the mail).</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>mailAttachmentMaxMb</name>
+            <label>Maximum total size of attachments (MB)</label>
+            <label lang="de-DE">Anhänge höchstens insgesamt (MB)</label>
+            <defaultValue>15</defaultValue>
+            <min>1</min>
+            <max>50</max>
         </input-field>
     </card>
 

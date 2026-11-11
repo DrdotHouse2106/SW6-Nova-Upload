@@ -100,6 +100,16 @@ class AccountUploadController extends StorefrontController
         }
 
         $guard = $this->twoFactorGuard;
+        $require2fa = $this->config->get('NovaUpload.config.downloadRequire2fa', $salesChannelId) ?? true;
+        if (!$require2fa) {
+            // Optional: nur wer 2FA eingerichtet hat, muss den Code bestätigen
+            if ($guard !== null && method_exists($guard, 'isEnabled') && method_exists($guard, 'isVerified')
+                && $guard->isEnabled($customer->getId()) && !$guard->isVerified($request, $customer->getId(), $salesChannelId)) {
+                return $this->redirectToRoute('frontend.nova_2fa.verify', ['redirectTo' => $request->getRequestUri()]);
+            }
+
+            return null;
+        }
         if ($guard === null || !method_exists($guard, 'isEnabled') || !method_exists($guard, 'isVerified')) {
             $this->addFlash(self::DANGER, $this->trans('novaUpload.account.missing2fa'));
 

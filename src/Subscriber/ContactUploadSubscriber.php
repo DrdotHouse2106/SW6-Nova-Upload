@@ -21,7 +21,8 @@ use Symfony\Contracts\Service\ResetInterface;
  *
  * 1. Vor dem Absenden: Anzahl, Typ und Größe prüfen – bei Fehlern antwortet das Formular mit einer Meldung.
  * 2. Nach erfolgreicher Prüfung des Formulars (ContactFormEvent): Dateien geschützt speichern.
- * 3. Mail an den Shop: kurzer Hinweis mit Dateinamen und Link in die Administration – keine Anhänge.
+ * 3. Mail an den Shop: kurzer Hinweis mit Dateinamen und Link in die Administration; auf Wunsch die Dateien als Anhang
+ *    (Einstellung „Dateien an die Kontaktformular-Mail anhängen“, Größengrenze), nie an die Kopie für den Absender.
  */
 class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterface
 {
@@ -174,6 +175,19 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
             . ($consentLine !== null ? "\n" . $consentLine : '')
             . "\n" . $text . ($search !== '' ? "\n" . $search : '');
 
+        if ($this->config->getBool('NovaUpload.config.mailAttachments', $salesChannelId)) {
+            $limit = max(1, $this->config->getInt('NovaUpload.config.mailAttachmentMaxMb', $salesChannelId) ?: 15) * 1024 * 1024;
+            [$attachments, $skipped] = $this->attachments($limit);
+            if ($attachments !== []) {
+                $event->addData('binAttachments', array_merge(\is_array($data['binAttachments'] ?? null) ? $data['binAttachments'] : [], $attachments));
+            }
+            if ($skipped !== []) {
+                $note = $this->rules->trans('novaUpload.mail.tooLarge') . ' ' . implode(', ', $skipped);
+                $html .= '<p>' . $e($note) . '</p>';
+                $plain .= "\n" . $note;
+            }
+        }
+
         // Inhalte sind Twig-Vorlagen – den Zusatz unverändert durchreichen
         if (\is_string($data['contentHtml'] ?? null)) {
             $event->addData('contentHtml', $data['contentHtml'] . '{% verbatim %}' . $html . '{% endverbatim %}');
@@ -181,6 +195,38 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
         if (\is_string($data['contentPlain'] ?? null)) {
             $event->addData('contentPlain', $data['contentPlain'] . '{% verbatim %}' . $plain . '{% endverbatim %}');
         }
+    }
+
+    /**
+     * Gespeicherte Dateien als Mail-Anhang, bis zur Größengrenze in der Reihenfolge des Uploads.
+     *
+     * @return array{0: list<array{content: string, fileName: string, mimeType: string}>, 1: list<string>}
+     */
+    private function attachments(int $limit): array
+    {
+        $attachments = [];
+        $skipped = [];
+        $total = 0;
+        foreach ($this->stored as $file) {
+            $info = $this->store->get($file['id']);
+            if ($info === null || $total + $info['size'] > $limit) {
+                $skipped[] = $file['name'];
+                continue;
+            }
+            $stream = $this->store->readStream($info['path']);
+            $content = $stream !== null ? stream_get_contents($stream) : false;
+            if (\is_resource($stream)) {
+                fclose($stream);
+            }
+            if (!\is_string($content)) {
+                $skipped[] = $file['name'];
+                continue;
+            }
+            $total += $info['size'];
+            $attachments[] = ['content' => $content, 'fileName' => $info['fileName'], 'mimeType' => $info['mimeType']];
+        }
+
+        return [$attachments, $skipped];
     }
 
     public function reset(): void

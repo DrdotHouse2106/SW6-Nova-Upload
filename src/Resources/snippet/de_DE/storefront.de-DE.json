@@ -19,7 +19,8 @@
             "text": "Die Dateien sind geschützt im Shop gespeichert: Administration → Bestellungen → Uploads",
             "consentYes": "Freigabe fürs Sortiment: JA – der Kunde ist einverstanden, dass das Teil ins Sortiment aufgenommen wird.",
             "consentNo": "Freigabe fürs Sortiment: nein",
-            "area": "Für freigeschaltete Konten mit Zwei-Faktor-Anmeldung im Shop abrufbar unter „Mein Konto → Anfragen & Dateien“:"
+            "area": "Für freigeschaltete Konten mit Zwei-Faktor-Anmeldung im Shop abrufbar unter „Mein Konto → Anfragen & Dateien“:",
+            "tooLarge": "Zu groß für den Anhang, nur im Shop gespeichert:"
         },
         "shareConsent": "Freiwillig: Ich bin einverstanden, dass das Teil aus meiner Anfrage ins Sortiment aufgenommen wird, damit auch andere davon profitieren.",
         "account": {
