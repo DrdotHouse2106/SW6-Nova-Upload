@@ -1,3 +1,6 @@
+# 1.4.2
+- Fixed: the link in the contact form mail (administration and download area) showed only the **first** file when several were uploaded. It now contains all file IDs of the request (comma-separated) and the list shows all of them
+
 # 1.4.1
 - Security: **new SVG check** – SVG is parsed as XML (without network access and without entity substitution) instead of a text search and only accepted without DOCTYPE/entities, scripts, `foreignObject`, animations, event attributes (`on…`), processing instructions and references to external files/addresses. Obfuscation via character references (`&#x61;`) no longer works. Rejected SVG files get their own explanatory message
 - Security: images need the signature and exactly the type of their format (instead of any `image/*` – an SVG named .jpg is rejected); PDF must start with `%PDF-` (unknown binary data no longer counts as PDF); SVG content is rejected under other extensions

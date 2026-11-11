@@ -191,6 +191,7 @@ class UploadStore
     {
         $where = ['1 = 1'];
         $params = [];
+        $types = [];
 
         if (\in_array($filter['source'] ?? '', [UploadRules::SOURCE_CONTACT, UploadRules::SOURCE_PRODUCT], true)) {
             $where[] = 'u.`source` = :source';
@@ -208,6 +209,13 @@ class UploadStore
         }
 
         $term = trim($filter['term'] ?? '');
+        // Mehrere Datei-IDs mit Komma (Link aus der Mail: alle Dateien einer Anfrage)
+        if (preg_match('/^[0-9a-f]{32}(,[0-9a-f]{32})+$/i', $term) === 1) {
+            $where[] = 'u.`id` IN (:ids)';
+            $params['ids'] = array_map(static fn (string $id): string => Uuid::fromHexToBytes(mb_strtolower($id)), explode(',', $term));
+            $types['ids'] = ArrayParameterType::BINARY;
+            $term = '';
+        }
         if ($term !== '') {
             $where[] = '(u.`file_name` LIKE :term OR u.`customer_name` LIKE :term OR u.`customer_email` LIKE :term
                 OR u.`reference` LIKE :term OR u.`order_number` LIKE :term OR LOWER(HEX(u.`id`)) = :hex)';
@@ -226,10 +234,11 @@ class UploadStore
                     LOWER(HEX(u.`order_id`)) AS orderId, u.`order_number` AS orderNumber, u.`created_at` AS createdAt
              FROM `nova_upload` u WHERE ' . $sqlWhere . '
              ORDER BY u.`created_at` DESC LIMIT ' . $limit . ' OFFSET ' . $offset,
-            $params
+            $params,
+            $types
         );
 
-        $total = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM `nova_upload` u WHERE ' . $sqlWhere, $params);
+        $total = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM `nova_upload` u WHERE ' . $sqlWhere, $params, $types);
 
         return ['items' => array_map(static function (array $row): array {
             $row['size'] = (int) $row['size'];

@@ -1,3 +1,6 @@
+# 1.4.2
+- Behoben: Der Link in der Mail zum Kontaktformular (Administration und Download-Bereich) zeigte bei mehreren Dateien nur die **erste** Datei. Jetzt enthält er alle Datei-IDs der Anfrage (mit Komma getrennt), die Liste zeigt alle Dateien dieser Anfrage
+
 # 1.4.1
 - Sicherheit: **SVG-Prüfung neu** – SVG wird als XML geparst (ohne Netzwerkzugriff und ohne Entity-Ersetzung) statt per Textsuche und nur angenommen ohne DOCTYPE/Entities, Skripte, `foreignObject`, Animationen, Ereignis-Attribute (`on…`), Verarbeitungsanweisungen und Verweise auf externe Dateien/Adressen. Verschleierungen über Zeichenreferenzen (`&#x61;`) greifen nicht mehr. Abgelehnte SVG bekommen einen eigenen, erklärenden Hinweis
 - Sicherheit: Bilder müssen die zum Format passende Signatur und genau den passenden Typ haben (statt beliebigem `image/*` – ein SVG mit Endung .jpg wird abgelehnt); PDF muss mit `%PDF-` beginnen (unbekannte Binärdaten gelten nicht mehr als PDF); SVG-Inhalt wird in anderen Endungen abgelehnt

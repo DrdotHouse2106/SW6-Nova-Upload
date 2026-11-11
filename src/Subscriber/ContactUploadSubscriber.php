@@ -142,14 +142,16 @@ class ContactUploadSubscriber implements EventSubscriberInterface, ResetInterfac
             return;
         }
 
-        $search = $this->adminUrl !== '' ? $this->adminUrl . '?term=' . rawurlencode($this->stored[0]['id']) : '';
+        // Alle Dateien dieser Anfrage (IDs mit Komma) – bisher nur die erste
+        $ids = implode(',', array_column($this->stored, 'id'));
+        $search = $this->adminUrl !== '' ? $this->adminUrl . '?term=' . rawurlencode($ids) : '';
         $headline = $this->rules->trans('novaUpload.mail.headline');
         $text = $this->rules->trans('novaUpload.mail.text');
         $e = static fn (string $value): string => htmlspecialchars($value, \ENT_QUOTES);
 
         // Download-Bereich im Kundenkonto (Passwort + Authenticator-App) für Empfänger ohne Admin-Zugang
         $areaUrl = $this->config->getBool('NovaUpload.config.downloadArea', $salesChannelId) && $this->shopUrl !== ''
-            ? $this->shopUrl . '/account/nova-uploads?term=' . rawurlencode($this->stored[0]['id'])
+            ? $this->shopUrl . '/account/nova-uploads?term=' . rawurlencode($ids)
             : null;
 
         $htmlItems = array_map(static fn (array $file): string => '• ' . $e($file['name']), $this->stored);
